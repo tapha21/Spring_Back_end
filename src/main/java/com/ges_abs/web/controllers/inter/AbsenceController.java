@@ -10,7 +10,7 @@ import java.util.Map;
 @RequestMapping("/api/absences")
 public interface AbsenceController {
     @GetMapping("")
-    public ResponseEntity<?> getAll();
+    ResponseEntity<?> getAll();
     @GetMapping("/v1")
     ResponseEntity<Map<String, Object>> getAll(
             @PageableDefault Pageable pageable,

@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Order(1)
-@Component
+//@Order(1)
+//@Component
 public class UserMock implements CommandLineRunner {
     private final UserRepository userRepository;
     public UserMock(UserRepository userRepository) {

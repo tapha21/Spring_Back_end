@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Order(3)
-@Component
+//@Order(3)
+//@Component
 public class ClasseMock implements CommandLineRunner {
     private final ClasseRepository classeRepository;
 
