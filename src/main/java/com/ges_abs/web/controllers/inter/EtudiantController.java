@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
-@RequestMapping("/api")
+@RequestMapping("/api/etudiants")
 public interface EtudiantController {
 
-    @GetMapping("/etudiants")
+    @GetMapping("")
     ResponseEntity<Map<String, Object>> getAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size

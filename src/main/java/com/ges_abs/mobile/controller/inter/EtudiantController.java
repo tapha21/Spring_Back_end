@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Map;
 
-@RequestMapping("/api")
+@RequestMapping("/api/etudiants")
 public interface EtudiantController {
 
-    @GetMapping("/etudiants")
+    @GetMapping("")
     ResponseEntity<Map<String, Object>> getAll(
             @PageableDefault Pageable pageable,
             @RequestParam(defaultValue = "0") int page,

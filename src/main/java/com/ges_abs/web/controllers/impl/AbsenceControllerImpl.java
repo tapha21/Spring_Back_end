@@ -22,19 +22,6 @@ public class AbsenceControllerImpl implements AbsenceController {
     }
 
     @Override
-    public ResponseEntity<?> getAll() {
-        var absences = absenceService.findAll();
-        var data = absences.stream()
-                .map(AbsenceMapper.INSTANCE::toDto)
-                .toList();
-        Map<String, Object> response = new HashMap<>();
-        response.put("message", "Liste complète des absences");
-        response.put("data", data);
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
-
-    @Override
     public ResponseEntity<Map<String, Object>> getAll(Pageable pageable, int page, int size) {
         Pageable effectivePageable = PageRequest.of(page, size);
         Page<Evenement> absences = absenceService.findAllPaginate(effectivePageable);

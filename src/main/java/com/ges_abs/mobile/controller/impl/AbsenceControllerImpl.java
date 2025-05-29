@@ -7,10 +7,6 @@ import org.springframework.http.ResponseEntity;
 import java.util.Map;
 
 public class AbsenceControllerImpl implements AbsenceController {
-    @Override
-    public ResponseEntity<?> getAll() {
-        return null;
-    }
 
     @Override
     public ResponseEntity<Map<String, Object>> getAll(Pageable pageable, int page, int size) {

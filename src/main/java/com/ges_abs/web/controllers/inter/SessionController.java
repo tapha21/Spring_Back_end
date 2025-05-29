@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
-@RequestMapping("/api")
+@RequestMapping("/api/sessions")
 public interface SessionController {
 
-    @GetMapping("/sessions")
+    @GetMapping("")
     ResponseEntity<Map<String, Object>> getAll(
             @PageableDefault Pageable pageable,
             @RequestParam(defaultValue = "0") int page,

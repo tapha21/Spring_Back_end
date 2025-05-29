@@ -7,11 +7,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
-@RequestMapping("/api")
+@RequestMapping("/api/absences")
 public interface AbsenceController {
     @GetMapping("")
-    ResponseEntity<?> getAll();
-    @GetMapping("/absences")
     ResponseEntity<Map<String, Object>> getAll(
             @PageableDefault Pageable pageable,
             @RequestParam(defaultValue = "0") int page,
