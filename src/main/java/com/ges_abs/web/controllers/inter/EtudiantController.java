@@ -12,10 +12,10 @@ public interface EtudiantController {
 
     @GetMapping("/v1")
     ResponseEntity<Map<String, Object>> getAll(
-            @PageableDefault Pageable pageable,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size
     );
+
 
     @GetMapping("/{matricule}")
     ResponseEntity<Map<String, Object>> getByMatricule(@PathVariable String matricule);

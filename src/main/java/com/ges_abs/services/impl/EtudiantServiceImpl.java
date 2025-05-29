@@ -15,7 +15,7 @@ public class EtudiantServiceImpl implements EtudiantService {
         this.etudiantRepository = etudiantRepository;
     }
     @Override
-    public Etudiant findById(Long id) {
+    public Etudiant findById(String id) {
         return etudiantRepository.findById(id).orElse(null);
     }
 

@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class EtudiantControllerImpl implements EtudiantController {
     @Override
-    public ResponseEntity<Map<String, Object>> getAll(Pageable pageable, int page, int size) {
+    public ResponseEntity<Map<String, Object>> getAll( int page, int size) {
         return null;
     }
 

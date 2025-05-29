@@ -1,7 +1,9 @@
 package com.ges_abs.web.controllers.impl;
 
 import com.ges_abs.data.models.entity.Etudiant;
+import com.ges_abs.data.models.entity.Evenement;
 import com.ges_abs.services.inter.EtudiantService;
+import com.ges_abs.web.Mapper.AbsenceMapper;
 import com.ges_abs.web.Mapper.EtudiantMapper;
 import com.ges_abs.web.controllers.inter.EtudiantController;
 import org.springframework.data.domain.Page;
@@ -24,15 +26,14 @@ public class EtudiantControllerImpl implements EtudiantController {
     }
 
     @Override
-    public ResponseEntity<Map<String, Object>> getAll(Pageable pageable, int page, int size) {
+    public ResponseEntity<Map<String, Object>> getAll( int page, int size) {
         Pageable effectivePageable = PageRequest.of(page, size);
         Page<Etudiant> etudiants = etudiantService.findAll(effectivePageable);
-        var data = etudiants.getContent()
-                .stream()
-                .map(EtudiantMapper.INSTANCE::toDto)
+        var data = etudiants.getContent().stream()
+                .map(EtudiantMapper.INSTANCE::toComplet)
                 .toList();
         Map<String, Object> response = new HashMap<>();
-        response.put("message", "Mes étudiants");
+        response.put("message", "Liste des absences");
         response.put("data", data);
         response.put("currentPage", etudiants.getNumber());
         response.put("totalItems", etudiants.getTotalElements());
@@ -56,5 +57,7 @@ public class EtudiantControllerImpl implements EtudiantController {
         response.put("totalPages", etudiants.getTotalPages());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+
 
 }

@@ -13,5 +13,5 @@ public interface EtudiantRepository extends MongoRepository<Etudiant, String> {
     Page<Etudiant> findAll(Pageable pageable);
     Page<Etudiant> findByMatricule(String matricule, Pageable pageable);
     Etudiant findByMatriculeAndPassword(String matricule, String password);
-    Optional<Etudiant> findById(long id);
+    Optional<Etudiant> findById(String id);
 }

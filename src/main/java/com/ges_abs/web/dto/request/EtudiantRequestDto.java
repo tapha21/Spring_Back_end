@@ -1,5 +1,6 @@
 package com.ges_abs.web.dto.request;
 
+import com.ges_abs.web.dto.response.ClasseResponseDto;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Data;
@@ -18,6 +19,6 @@ public class EtudiantRequestDto {
     private int age;
     private String niveau;
     private String filiere;
-    private String classe;
+    private ClasseResponseDto classe;
     private String matricule;
 }
