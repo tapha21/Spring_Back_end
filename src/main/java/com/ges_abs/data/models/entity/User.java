@@ -1,5 +1,6 @@
 package com.ges_abs.data.models.entity;
 
+import com.ges_abs.data.mock.AbstractEntity;
 import com.ges_abs.data.models.enumeration.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;

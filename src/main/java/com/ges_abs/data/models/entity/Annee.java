@@ -1,16 +1,20 @@
 package com.ges_abs.data.models.entity;
 
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import com.ges_abs.data.mock.AbstractEntity;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -22,5 +26,11 @@ public class Annee extends AbstractEntity{
     private LocalDate dateDebut;
     private LocalTime heureDebut;
     @DBRef
-    private List<Inscription> inscriptionList ;
+    private List<Inscription> inscriptionList = new ArrayList<>();
+
+    public Annee(String libelle, LocalDate dateDebut, LocalTime heureDebut) {
+        this.libelle = libelle;
+        this.dateDebut = dateDebut;
+        this.heureDebut = heureDebut;
+    }
 }

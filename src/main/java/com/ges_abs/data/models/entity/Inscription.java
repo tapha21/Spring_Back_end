@@ -1,13 +1,16 @@
 package com.ges_abs.data.models.entity;
 
+import java.time.LocalDate;
+
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import com.ges_abs.data.mock.AbstractEntity;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.time.LocalDate;
 
 
 @Data
@@ -23,4 +26,5 @@ public class Inscription extends AbstractEntity{
     private Annee annee;
     @DBRef
     private Classe classe;
+
 }
