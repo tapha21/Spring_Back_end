@@ -3,6 +3,7 @@ package com.ges_abs.data.mock;
 import com.ges_abs.data.models.entity.Cours;
 import com.ges_abs.data.models.entity.Session;
 import com.ges_abs.data.repository.CoursRepository;
+import com.ges_abs.data.repository.PointageRepository;
 import com.ges_abs.data.repository.SessionRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
@@ -19,10 +20,11 @@ public class SessionMock implements CommandLineRunner {
 
     private final SessionRepository sessionRepository;
     private final CoursRepository coursRepository;
-
-    public SessionMock(SessionRepository sessionRepository, CoursRepository coursRepository) {
+    private final PointageRepository pointageRepository;
+    public SessionMock(SessionRepository sessionRepository, CoursRepository coursRepository, PointageRepository pointageRepository) {
         this.sessionRepository = sessionRepository;
         this.coursRepository = coursRepository;
+        this.pointageRepository = pointageRepository;
     }
 
     @Override

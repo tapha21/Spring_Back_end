@@ -16,7 +16,6 @@ public interface EtudiantController {
             @RequestParam(defaultValue = "5") int size
     );
 
-
     @GetMapping("/{matricule}")
     ResponseEntity<Map<String, Object>> getByMatricule(@PathVariable String matricule);
 }
