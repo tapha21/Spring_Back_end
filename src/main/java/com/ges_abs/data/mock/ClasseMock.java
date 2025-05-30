@@ -6,11 +6,13 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
-//@Order(3)
-//@Component
+@Order(3)
+@Component
 public class ClasseMock implements CommandLineRunner {
+
     private final ClasseRepository classeRepository;
 
     public ClasseMock(ClasseRepository classeRepository) {
@@ -20,23 +22,31 @@ public class ClasseMock implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         if (classeRepository.count() == 0) {
+            List<Classe> classes = new ArrayList<>();
+
             Classe c1 = new Classe();
-            c1.setNiveau("L1");
-            c1.setFiliere("L1C");
+            c1.setNiveau("Licence 1");
+            c1.setFiliere("Informatique");
+            c1.setInscription(new ArrayList<>());
+            c1.setCours(new ArrayList<>());
 
             Classe c2 = new Classe();
-            c2.setNiveau("L2");
-            c2.setFiliere("L2GLRSA");
+            c2.setNiveau("Licence 2");
+            c2.setFiliere("Gestion");
+            c2.setInscription(new ArrayList<>());
+            c2.setCours(new ArrayList<>());
 
             Classe c3 = new Classe();
-            c3.setNiveau("L3");
-            c3.setFiliere("IAGE");
+            c3.setNiveau("Licence 3");
+            c3.setFiliere("Mathématiques");
+            c3.setInscription(new ArrayList<>());
+            c3.setCours(new ArrayList<>());
 
-            Classe c4 = new Classe();
-            c4.setNiveau("L1");
-            c4.setFiliere("TTL");
+            classes.add(c1);
+            classes.add(c2);
+            classes.add(c3);
 
-            classeRepository.saveAll(List.of(c1, c2, c3, c4));
+            classeRepository.saveAll(classes);
         }
     }
 }

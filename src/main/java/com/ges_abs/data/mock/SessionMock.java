@@ -13,9 +13,10 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-//@Order(5)
-//@Component
+@Order(8)
+@Component
 public class SessionMock implements CommandLineRunner {
+
     private final SessionRepository sessionRepository;
     private final CoursRepository coursRepository;
 
@@ -28,16 +29,23 @@ public class SessionMock implements CommandLineRunner {
     public void run(String... args) throws Exception {
         if (sessionRepository.count() == 0) {
             List<Cours> coursList = coursRepository.findAll();
+            if (coursList.isEmpty()) return;
+
             List<Session> sessions = new ArrayList<>();
 
             for (Cours cours : coursList) {
-                Session session = new Session();
-                session.setDate(LocalDate.now());
-                session.setHeureDebut(LocalTime.of(8, 0));
-                session.setHeureFin(LocalTime.of(12, 0));
-                session.setCours(cours);
-                sessions.add(session);
+                for (int i = 1; i <= 2; i++) {
+                    Session session = new Session();
+                    session.setDate(LocalDate.now().plusDays(i));
+                    session.setHeureDebut(LocalTime.of(8 + i, 0));
+                    session.setHeureFin(LocalTime.of(10 + i, 0));
+                    session.setCours(cours);
+                    session.setPointages(new ArrayList<>());
+                    session.setEvenements(new ArrayList<>());
+                    sessions.add(session);
+                }
             }
+
             sessionRepository.saveAll(sessions);
         }
     }

@@ -38,5 +38,10 @@ public class AbsenceControllerImpl implements AbsenceController {
         return null;
     }
 
+    @Override
+    public ResponseEntity<Map<String, Object>> obtenirAbsencesParEtudiantEtPeriode(String etudiantId, String dateDebut, String dateFin, int page, int taille) {
+        return null;
+    }
+
 
 }

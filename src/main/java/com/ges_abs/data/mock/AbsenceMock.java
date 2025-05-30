@@ -15,8 +15,8 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-//@Order(3)
-//@Component
+@Order(5) // si tu veux garder l'ordre d'exécution
+@Component
 public class AbsenceMock implements CommandLineRunner {
 
     private final EtudiantRepository etudiantRepository;
@@ -33,18 +33,20 @@ public class AbsenceMock implements CommandLineRunner {
             List<Etudiant> etudiants = etudiantRepository.findAll();
             List<Evenement> absences = new ArrayList<>();
             for (Etudiant etudiant : etudiants) {
-                for (int i = 1; i <= 3; i++) {
+                for (int i = 1; i <= 4; i++) {
                     Evenement absence = new Evenement();
                     absence.setDateDebut(LocalDate.now().minusDays(i));
                     absence.setHeureDebut(LocalTime.of(8, 0));
                     absence.setHeureFin(LocalTime.of(10, 0));
                     absence.setJustification("Justification absence " + i);
-                    absence.setEtat(Etat.NOJUSTIFIE);
+                    Etat etat = (i % 2 == 0) ? Etat.JUSTIFIE : Etat.NOJUSTIFIE;
+                    absence.setEtat(etat);
                     absence.setType(Type.ABSENCE);
                     absence.setEtudiant(etudiant);
                     absences.add(absence);
                 }
             }
+
             evenementRepository.saveAll(absences);
         }
     }

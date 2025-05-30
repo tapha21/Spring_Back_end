@@ -8,11 +8,13 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
-//
-//@Order(4)
-//@Component
+
+@Order(6)
+@Component
 public class CoursMock implements CommandLineRunner {
+
     private final CoursRepository coursRepository;
     private final ClasseRepository classeRepository;
 
@@ -26,27 +28,34 @@ public class CoursMock implements CommandLineRunner {
         if (coursRepository.count() == 0) {
             List<Classe> classes = classeRepository.findAll();
 
-            Cours c1 = new Cours();
-            c1.setLibelle("Algorithmique");
-            c1.setProfesseur("Louis Rois");
-            c1.setClasse(classes.get(0));
+            List<Cours> coursList = new ArrayList<>();
 
-            Cours c2 = new Cours();
-            c2.setLibelle("Pyhto,");
-            c2.setProfesseur("Souleymane Fall");
-            c2.setClasse(classes.get(1));
+            if (!classes.isEmpty()) {
+                Cours c1 = new Cours();
+                c1.setLibelle("Mathématiques");
+                c1.setProfesseur("Professeur A");
+                c1.setClasse(classes.get(0));
+                c1.setSessions(new ArrayList<>());
+                c1.setEtudiantCoursList(new ArrayList<>());
 
-            Cours c3 = new Cours();
-            c3.setLibelle("Angular");
-            c3.setProfesseur("Beatrice Faye");
-            c3.setClasse(classes.get(2));
+                Cours c2 = new Cours();
+                c2.setLibelle("Programmation");
+                c2.setProfesseur("Professeur B");
+                c2.setClasse(classes.get(0));
+                c2.setSessions(new ArrayList<>());
+                c2.setEtudiantCoursList(new ArrayList<>());
 
-            Cours c4 = new Cours();
-            c4.setLibelle("Flutter");
-            c4.setProfesseur("Mbaye Diop");
-            c4.setClasse(classes.get(3));
-
-            coursRepository.saveAll(List.of(c1, c2, c3, c4));
+                Cours c3 = new Cours();
+                c3.setLibelle("Gestion");
+                c3.setProfesseur("Professeur C");
+                c3.setClasse(classes.get(1));
+                c3.setSessions(new ArrayList<>());
+                c3.setEtudiantCoursList(new ArrayList<>());
+                coursList.add(c1);
+                coursList.add(c2);
+                coursList.add(c3);
+                coursRepository.saveAll(coursList);
+            }
         }
     }
 }
