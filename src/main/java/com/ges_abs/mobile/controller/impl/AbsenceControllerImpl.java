@@ -1,39 +1,40 @@
 package com.ges_abs.mobile.controller.impl;
 
-import com.ges_abs.web.controllers.inter.AbsenceController;
-import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.Map;
 
-public class AbsenceControllerImpl implements AbsenceController {
-    @Override
-    public ResponseEntity<?> getAll() {
-        return null;
+@RestController
+@RequestMapping("/api/absences")
+public class AbsenceControllerImpl {
+
+    // 1. Toutes les absences d'un étudiant
+    @GetMapping("/etudiant/{etudiantId}")
+    public ResponseEntity<Map<String, Object>> getByEtudiant(@PathVariable String etudiantId) {
+        // ... logique pour récupérer toutes les absences de l'étudiant
+        return ResponseEntity.ok(new HashMap<>());
     }
 
-    @Override
-    public ResponseEntity<Map<String, Object>> getAll(Pageable pageable, int page, int size) {
-        return null;
+    // 2. Absences d'un étudiant filtrées par période
+    @GetMapping("/etudiant/{etudiantId}/periode")
+    public ResponseEntity<Map<String, Object>> getByEtudiantAndPeriode(
+            @PathVariable String etudiantId,
+            @RequestParam("debut") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate debut,
+            @RequestParam("fin") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fin) {
+        // ... logique pour récupérer les absences de l'étudiant entre deux dates
+        return ResponseEntity.ok(new HashMap<>());
     }
 
-    @Override
-    public ResponseEntity<Map<String, Object>> getById(String id) {
-        return null;
-    }
-
-    @Override
-    public ResponseEntity<Map<String, Object>> getByEtat(String etat) {
-        return null;
-    }
-
-    @Override
-    public ResponseEntity<Map<String, Object>> getByType(String type) {
-        return null;
-    }
-
-    @Override
-    public ResponseEntity<Map<String, Object>> getByEtudiant(String etudiantId) {
-        return null;
+    // 3. Absences d'un étudiant filtrées par état
+    @GetMapping("/etudiant/{etudiantId}/etat")
+    public ResponseEntity<Map<String, Object>> getByEtudiantAndEtat(
+            @PathVariable String etudiantId,
+            @RequestParam("etat") String etat) {
+        // ... logique pour récupérer les absences de l'étudiant avec un état donné
+        return ResponseEntity.ok(new HashMap<>());
     }
 }
