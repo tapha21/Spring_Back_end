@@ -48,4 +48,10 @@ public class AbsenceServiceImpl  implements AbsenceService {
     public Page<Evenement> findByEtudiantId(String etudiantId, Pageable pageable) {
         return absenceRepository.findByEtudiant_Id(etudiantId, pageable);
     }
+
+    @Override
+    public Page<Evenement> findEtudiantByEtat(String etudiantId, Etat etat, Pageable pageable) {
+        return absenceRepository.findEtudiantByEtat(etat, etudiantId, pageable);
+    }
+
 }

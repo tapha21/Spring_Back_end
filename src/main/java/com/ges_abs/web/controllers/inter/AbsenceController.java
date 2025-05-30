@@ -23,4 +23,12 @@ public interface AbsenceController {
     ResponseEntity<Map<String, Object>> getByType(@PathVariable String type);
     @GetMapping("/etudiant/{etudiantId}")
     ResponseEntity<Map<String, Object>> getByEtudiant(@PathVariable String etudiantId);
+    @GetMapping("/etudiant/etat/{etat}")
+    ResponseEntity<Map<String, Object>> getEtudiantAbsenceByEtat(
+            @PathVariable String etat,
+            @RequestParam String etudiantId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    );
+
 }

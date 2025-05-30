@@ -5,6 +5,7 @@ import com.ges_abs.data.models.enumeration.Type;
 import com.ges_abs.services.inter.AbsenceService;
 import com.ges_abs.web.Mapper.AbsenceMapper;
 import com.ges_abs.web.controllers.inter.AbsenceController;
+import com.ges_abs.web.dto.response.AbsenceResponseDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -12,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -91,4 +93,29 @@ public class AbsenceControllerImpl implements AbsenceController {
         );
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    @Override
+    public ResponseEntity<Map<String, Object>> getEtudiantAbsenceByEtat(
+            String etat,
+            String etudiantId,
+            int page,
+            int size
+    ) {
+        Etat etatEnum = Etat.valueOf(etat.toUpperCase());
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Evenement> absences = absenceService.findEtudiantByEtat(etudiantId, etatEnum, pageable);
+        List<AbsenceResponseDto> data = absences.getContent().stream()
+                .map(AbsenceMapper.INSTANCE::toDto)
+                .toList();
+        Map<String, Object> response = Map.of(
+                "message", "Absences de l'étudiant " + etudiantId + " avec l'état : " + etatEnum,
+                "data", data,
+                "currentPage", absences.getNumber(),
+                "totalItems", absences.getTotalElements(),
+                "totalPages", absences.getTotalPages()
+        );
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+
 }

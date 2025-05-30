@@ -32,4 +32,11 @@ public class AbsenceControllerImpl implements AbsenceController {
     public ResponseEntity<Map<String, Object>> getByEtudiant(String etudiantId) {
         return null;
     }
+
+    @Override
+    public ResponseEntity<Map<String, Object>> getEtudiantAbsenceByEtat(String etat, String etudiantId, int page, int size) {
+        return null;
+    }
+
+
 }
