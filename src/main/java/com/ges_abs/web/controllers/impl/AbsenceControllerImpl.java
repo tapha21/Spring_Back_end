@@ -12,6 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -116,6 +118,36 @@ public class AbsenceControllerImpl implements AbsenceController {
         );
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    @Override
+    public ResponseEntity<Map<String, Object>> obtenirAbsencesParEtudiantEtPeriode(
+            String etudiantId,
+            String dateDebut,
+            String dateFin,
+            int page,
+            int taille
+    ) {
+        LocalDate debut = LocalDate.parse(dateDebut);
+        LocalDate fin = LocalDate.parse(dateFin);
+        Pageable pageable = PageRequest.of(page, taille);
+
+        Page<Evenement> absences = absenceService.findByEtudiantIdAndPeriode(etudiantId, debut, fin, pageable);
+
+        List<AbsenceResponseDto> donnees = absences.getContent().stream()
+                .map(AbsenceMapper.INSTANCE::toDto)
+                .toList();
+
+        Map<String, Object> reponse = Map.of(
+                "message", "Liste des absences de l'étudiant " + etudiantId + " entre le " + dateDebut + " et le " + dateFin,
+                "donnees", donnees,
+                "pageCourante", absences.getNumber(),
+                "totalElements", absences.getTotalElements(),
+                "totalPages", absences.getTotalPages()
+        );
+
+        return new ResponseEntity<>(reponse, HttpStatus.OK);
+    }
+
 
 
 }

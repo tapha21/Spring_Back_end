@@ -7,6 +7,7 @@ import com.ges_abs.data.models.entity.Evenement;
 import com.ges_abs.data.models.enumeration.Etat;
 import com.ges_abs.data.models.enumeration.Type;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface AbsenceService {
@@ -17,4 +18,6 @@ public interface AbsenceService {
         Page<Evenement> findByType(Type type, Pageable pageable);
         Page<Evenement> findByEtudiantId(String etudiantId, Pageable pageable);
         Page<Evenement> findEtudiantByEtat(String etudiantId, Etat etat, Pageable pageable);
+        Page<Evenement> findByEtudiantIdAndPeriode(String etudiantId, LocalDate dateDebut, LocalDate dateFin, Pageable pageable);
+
 }

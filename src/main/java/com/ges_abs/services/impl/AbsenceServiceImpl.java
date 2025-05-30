@@ -10,6 +10,7 @@ import com.ges_abs.data.models.enumeration.Type;
 import com.ges_abs.services.inter.AbsenceService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -52,6 +53,10 @@ public class AbsenceServiceImpl  implements AbsenceService {
     @Override
     public Page<Evenement> findEtudiantByEtat(String etudiantId, Etat etat, Pageable pageable) {
         return absenceRepository.findEtudiantByEtat(etat, etudiantId, pageable);
+    }
+    @Override
+    public Page<Evenement> findByEtudiantIdAndPeriode(String etudiantId, LocalDate dateDebut, LocalDate dateFin, Pageable pageable) {
+        return absenceRepository.findByEtudiantIdAndDateDebut(etudiantId, dateDebut, dateFin, pageable);
     }
 
 }
