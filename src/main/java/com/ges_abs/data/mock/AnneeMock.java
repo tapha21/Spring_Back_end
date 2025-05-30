@@ -15,8 +15,8 @@ import com.ges_abs.data.repository.AnneeRepository;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Order(1)
-@Component
+//@Order(1)
+//@Component
 public class AnneeMock implements CommandLineRunner {
 
     private final AnneeRepository anneeRepository;

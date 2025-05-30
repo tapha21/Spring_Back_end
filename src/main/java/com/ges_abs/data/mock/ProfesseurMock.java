@@ -11,8 +11,8 @@ import com.ges_abs.data.models.entity.Professeur;
 import com.ges_abs.data.models.enumeration.Role;
 import com.ges_abs.data.repository.ProfesseurRepository;
 
-@Order(3)
-@Component
+//@Order(3)
+//@Component
 public class ProfesseurMock implements CommandLineRunner {
 
     private final ProfesseurRepository professeurRepository;

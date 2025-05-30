@@ -18,8 +18,8 @@ import com.ges_abs.data.repository.ProfesseurRepository;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Order(4)
-@Component
+//@Order(4)
+//@Component
 public class CoursMock implements CommandLineRunner {
 
     private final CoursRepository coursRepository;

@@ -13,8 +13,8 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Order(8)
-@Component
+//@Order(8)
+//@Component
 public class SessionMock implements CommandLineRunner {
 
     private final SessionRepository sessionRepository;

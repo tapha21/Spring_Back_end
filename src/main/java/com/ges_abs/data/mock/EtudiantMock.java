@@ -13,8 +13,8 @@ import java.util.List;
 import java.util.Random;
 
 @Slf4j
-@Order(5)
-@Component
+//@Order(5)
+//@Component
 public class EtudiantMock implements CommandLineRunner {
 
     private final EtudiantRepository etudiantRepository;
