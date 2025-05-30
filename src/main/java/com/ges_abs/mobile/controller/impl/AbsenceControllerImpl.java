@@ -1,40 +1,66 @@
 package com.ges_abs.mobile.controller.impl;
 
+import com.ges_abs.data.models.entity.Evenement;
+import com.ges_abs.mobile.controller.inter.AbsenceController;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/absences")
-public class AbsenceControllerImpl {
+public class AbsenceControllerImpl implements AbsenceController {
 
-    // 1. Toutes les absences d'un étudiant
+    @Override
+    @GetMapping
+    public ResponseEntity<List<Evenement>> getAll() {
+        return ResponseEntity.ok(Collections.emptyList());
+    }
+
+    @Override
+    public ResponseEntity<List<Evenement>> getAll(org.springframework.data.domain.Pageable pageable, int page, int size) {
+        return ResponseEntity.ok(Collections.emptyList());
+    }
+
+    @Override
+    public ResponseEntity<Evenement> getById(String id) {
+        return ResponseEntity.of(Optional.empty());
+    }
+
+    @Override
+    public ResponseEntity<List<Evenement>> getByEtat(String etat) {
+        return ResponseEntity.ok(Collections.emptyList());
+    }
+
+    @Override
+    @GetMapping("/type/{type}")
+    public ResponseEntity<List<Evenement>> getByType(@PathVariable String type) {
+        return ResponseEntity.ok(Collections.emptyList());
+    }
+
+    @Override
     @GetMapping("/etudiant/{etudiantId}")
-    public ResponseEntity<Map<String, Object>> getByEtudiant(@PathVariable String etudiantId) {
-        // ... logique pour récupérer toutes les absences de l'étudiant
-        return ResponseEntity.ok(new HashMap<>());
+    public ResponseEntity<List<Evenement>> getByEtudiant(@PathVariable String etudiantId) {
+        return ResponseEntity.ok(Collections.emptyList());
     }
 
-    // 2. Absences d'un étudiant filtrées par période
+    @Override
     @GetMapping("/etudiant/{etudiantId}/periode")
-    public ResponseEntity<Map<String, Object>> getByEtudiantAndPeriode(
+    public ResponseEntity<List<Evenement>> getByEtudiantAndPeriode(
             @PathVariable String etudiantId,
-            @RequestParam("debut") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate debut,
-            @RequestParam("fin") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fin) {
-        // ... logique pour récupérer les absences de l'étudiant entre deux dates
-        return ResponseEntity.ok(new HashMap<>());
+            @RequestParam("debut") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) String debut,
+            @RequestParam("fin") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) String fin) {
+        return ResponseEntity.ok(Collections.emptyList());
     }
 
-    // 3. Absences d'un étudiant filtrées par état
+    @Override
     @GetMapping("/etudiant/{etudiantId}/etat")
-    public ResponseEntity<Map<String, Object>> getByEtudiantAndEtat(
+    public ResponseEntity<List<Evenement>> getByEtudiantAndEtat(
             @PathVariable String etudiantId,
             @RequestParam("etat") String etat) {
-        // ... logique pour récupérer les absences de l'étudiant avec un état donné
-        return ResponseEntity.ok(new HashMap<>());
+        return ResponseEntity.ok(Collections.emptyList());
     }
 }
