@@ -1,14 +1,19 @@
 package com.ges_abs.data.models.entity;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import com.ges_abs.data.mock.AbstractEntity;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -22,7 +27,14 @@ public class Session extends AbstractEntity {
     @DBRef
     private Cours cours;
     @DBRef
-    private List<Pointage> pointages;
+    private List<Pointage> pointages = new ArrayList<>();
     @DBRef
-    private List<Evenement> evenements;
+    private List<Evenement> evenements = new ArrayList<>();
+
+    public Session(LocalDate date, LocalTime heureDebut, LocalTime heureFin, Cours cours) {
+        this.date = date;
+        this.heureDebut = heureDebut;
+        this.heureFin = heureFin;
+        this.cours = cours;
+    }
 }

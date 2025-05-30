@@ -15,7 +15,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Order(5) // si tu veux garder l'ordre d'exécution
+@Order(5) 
 @Component
 public class AbsenceMock implements CommandLineRunner {
 

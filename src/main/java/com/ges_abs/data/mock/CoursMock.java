@@ -1,61 +1,59 @@
 package com.ges_abs.data.mock;
 
-import com.ges_abs.data.models.entity.Classe;
-import com.ges_abs.data.models.entity.Cours;
-import com.ges_abs.data.repository.ClasseRepository;
-import com.ges_abs.data.repository.CoursRepository;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.ges_abs.data.models.entity.Classe;
+import com.ges_abs.data.models.entity.Cours;
+import com.ges_abs.data.models.entity.Professeur;
+import com.ges_abs.data.repository.ClasseRepository;
+import com.ges_abs.data.repository.CoursRepository;
+import com.ges_abs.data.repository.ProfesseurRepository;
 
-@Order(6)
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Order(4)
 @Component
 public class CoursMock implements CommandLineRunner {
 
     private final CoursRepository coursRepository;
+    private final ProfesseurRepository professeurRepository;
     private final ClasseRepository classeRepository;
+    private final Random random = new Random();
 
-    public CoursMock(CoursRepository coursRepository, ClasseRepository classeRepository) {
+    public CoursMock(CoursRepository coursRepository, ProfesseurRepository professeurRepository, ClasseRepository classeRepository) {
         this.coursRepository = coursRepository;
+        this.professeurRepository = professeurRepository;
         this.classeRepository = classeRepository;
     }
 
     @Override
     public void run(String... args) throws Exception {
         if (coursRepository.count() == 0) {
+            List<Professeur> professeurs = professeurRepository.findAll();
             List<Classe> classes = classeRepository.findAll();
 
-            List<Cours> coursList = new ArrayList<>();
-
-            if (!classes.isEmpty()) {
-                Cours c1 = new Cours();
-                c1.setLibelle("Mathématiques");
-                c1.setProfesseur("Professeur A");
-                c1.setClasse(classes.get(0));
-                c1.setSessions(new ArrayList<>());
-                c1.setEtudiantCoursList(new ArrayList<>());
-
-                Cours c2 = new Cours();
-                c2.setLibelle("Programmation");
-                c2.setProfesseur("Professeur B");
-                c2.setClasse(classes.get(0));
-                c2.setSessions(new ArrayList<>());
-                c2.setEtudiantCoursList(new ArrayList<>());
-
-                Cours c3 = new Cours();
-                c3.setLibelle("Gestion");
-                c3.setProfesseur("Professeur C");
-                c3.setClasse(classes.get(1));
-                c3.setSessions(new ArrayList<>());
-                c3.setEtudiantCoursList(new ArrayList<>());
-                coursList.add(c1);
-                coursList.add(c2);
-                coursList.add(c3);
-                coursRepository.saveAll(coursList);
+            if (professeurs.isEmpty() || classes.isEmpty()) {
+                log.warn("Pas de professeurs ou de classes trouvés pour créer des cours.");
+                return;
             }
+
+            List<Cours> coursList = Arrays.asList(
+                    new Cours("Algorithmique", professeurs.get(2), classes.get(0), null, null),
+                    new Cours("Angular", professeurs.get(2), classes.get(0), null, null),
+                    new Cours("UML", professeurs.get(2), classes.get(1), null, null),
+                    new Cours("SQL", professeurs.get(0), classes.get(1), null, null),
+                    new Cours("Spring", professeurs.get(2), classes.get(3), null, null),
+                    new Cours("Management des processus", professeurs.get(1), classes.get(4), null, null)
+            );
+            coursRepository.saveAll(coursList);
+            log.info("Mocks de cours créés.");
         }
     }
 }

@@ -1,7 +1,5 @@
 package com.ges_abs.data.repository;
 
-
-import com.ges_abs.data.models.entity.Evenement;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -14,4 +12,5 @@ public interface EtudiantRepository extends MongoRepository<Etudiant, String> {
     Page<Etudiant> findByMatricule(String matricule, Pageable pageable);
     Etudiant findByMatriculeAndPassword(String matricule, String password);
     Optional<Etudiant> findById(String id);
+    Optional<Etudiant> findByLogin(String login);
 }

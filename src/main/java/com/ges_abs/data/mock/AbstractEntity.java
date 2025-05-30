@@ -1,4 +1,4 @@
-package com.ges_abs.data.models.entity;
+package com.ges_abs.data.mock;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;
