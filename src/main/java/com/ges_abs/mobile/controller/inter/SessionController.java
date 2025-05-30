@@ -9,21 +9,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Map;
-
-@RequestMapping("/api/sessions")
+@RequestMapping("/api/mobile/sessions")
 public interface SessionController {
 
-<<<<<<< HEAD
     @GetMapping("")
-=======
-    @GetMapping("/v1")
->>>>>>> dev/safietou_deme_diop
-    ResponseEntity<Map<String, Object>> getAll(
-            @PageableDefault Pageable pageable,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size
-    );
+    ResponseEntity<Map<String, Object>> getAll();
 
     @GetMapping("/{id}")
     ResponseEntity<Map<String, Object>> getById(@PathVariable String id);
+
 }

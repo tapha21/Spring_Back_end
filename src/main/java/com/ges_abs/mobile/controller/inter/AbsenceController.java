@@ -1,18 +1,42 @@
 package com.ges_abs.mobile.controller.inter;
 
-import com.ges_abs.data.models.entity.Evenement;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Map;
+@RequestMapping("/api/mobile/absences")
 public interface AbsenceController {
-    ResponseEntity<List<Evenement>> getAll();
-    ResponseEntity<List<Evenement>> getAll(org.springframework.data.domain.Pageable pageable, int page, int size);
-    ResponseEntity<Evenement> getById(String id);
-    ResponseEntity<List<Evenement>> getByEtat(String etat);
-    ResponseEntity<List<Evenement>> getByType(String type);
-    ResponseEntity<List<Evenement>> getByEtudiant(String etudiantId);
 
-    ResponseEntity<List<Evenement>> getByEtudiantAndPeriode(String etudiantId, String dateDebut, String dateFin);
-    ResponseEntity<List<Evenement>> getByEtudiantAndEtat(String etudiantId, String etat);
+    @GetMapping("")
+    ResponseEntity<Map<String, Object>> getAll();
+
+    @GetMapping("/{id}")
+    ResponseEntity<Map<String, Object>> getById(@PathVariable String id);
+
+    @GetMapping("/etat/{etat}")
+    ResponseEntity<Map<String, Object>> getByEtat(@PathVariable String etat);
+
+    @GetMapping("/type/{type}")
+    ResponseEntity<Map<String, Object>> getByType(@PathVariable String type);
+
+    @GetMapping("/etudiant/{etudiantId}")
+    ResponseEntity<Map<String, Object>> getByEtudiant(@PathVariable String etudiantId);
+
+    @GetMapping("/etudiant/etat/{etat}")
+    ResponseEntity<Map<String, Object>> getEtudiantAbsenceByEtat(
+            @PathVariable String etat,
+            @RequestParam String etudiantId
+    );
+
+    @GetMapping("/filtre")
+    ResponseEntity<Map<String, Object>> obtenirAbsencesParEtudiantEtPeriode(
+            @RequestParam String etudiantId,
+            @RequestParam String dateDebut,
+            @RequestParam String dateFin
+    );
 }
