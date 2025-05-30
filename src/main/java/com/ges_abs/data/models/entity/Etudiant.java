@@ -18,6 +18,7 @@ public class Etudiant extends User {
     private String niveau;
     private String filiere;
     private String matricule;
+    private byte[] photo;
     @DBRef
     private Classe classe;
     @DBRef

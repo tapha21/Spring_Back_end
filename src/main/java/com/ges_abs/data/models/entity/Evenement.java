@@ -25,4 +25,8 @@ public class Evenement extends AbstractEntity {
     private Type type;
     @DBRef
     private Etudiant etudiant;
+    private String motif;
+    private String justificatifNomFichier;
+    private String justificatifType;
+    private byte[] justificatifData;
 }

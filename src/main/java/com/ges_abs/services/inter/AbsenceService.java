@@ -1,5 +1,5 @@
 package com.ges_abs.services.inter;
-
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -16,4 +16,5 @@ public interface AbsenceService {
         Page<Evenement> findByEtat(Etat etat, Pageable pageable);
         Page<Evenement> findByType(Type type, Pageable pageable);
         Page<Evenement> findByEtudiantId(String etudiantId, Pageable pageable);
+        void addJustificatif(String etudiantId, String absenceId, String motif, MultipartFile file);
 }

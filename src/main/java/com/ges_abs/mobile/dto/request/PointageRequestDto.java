@@ -7,6 +7,4 @@ import lombok.Data;
 public class PointageRequestDto {
     @NotBlank
     private String matricule;
-    @NotBlank
-    private String sessionId;
 }
