@@ -7,7 +7,5 @@ import com.ges_abs.data.models.entity.User;
 import com.ges_abs.data.models.enumeration.Role;
 
 public interface UserService {
-    Page<User> findAllPaginate(Pageable pageable);
-    Page<User> findByRole(Role role, Pageable pageable);
     Page<User>findByLoginAndPassword(String login, String password, Pageable pageable);
 }

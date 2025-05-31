@@ -11,6 +11,6 @@ public class PointageWebResponseDto {
     private String id;
     private LocalDate date;
     private LocalTime heure;
-    private UserWebResponseDto vigile;
+    private VigileWebResponseDto vigile;
     private EtudiantSimpleWebResponseDto etudiant;
 }

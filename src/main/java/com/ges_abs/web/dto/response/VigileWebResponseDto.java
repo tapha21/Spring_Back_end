@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Builder
 @Data
-public class VigileWevResponseDto {
+public class VigileWebResponseDto {
     private String id;
     private String login;
     private String nom;

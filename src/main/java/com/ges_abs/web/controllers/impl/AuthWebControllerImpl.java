@@ -4,6 +4,7 @@ import com.ges_abs.data.models.entity.User;
 import com.ges_abs.mobile.dto.request.LoginRequestDto;
 import com.ges_abs.services.inter.AuthService;
 import com.ges_abs.web.controllers.inter.AuthWebController;
+import com.ges_abs.web.dto.request.LoginWebRequestDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,20 +21,22 @@ public class AuthWebControllerImpl implements AuthWebController {
         this.authService = authService;
     }
 
+
     @Override
-    public ResponseEntity<Map<String, Object>> login(@RequestBody LoginRequestDto loginRequest) {
-        Optional<User> userOpt = authService.login(loginRequest);
+    public ResponseEntity<?> login(LoginWebRequestDto loginRequest) {
+        LoginRequestDto loginDto = new LoginRequestDto();
+        loginDto.setLogin(loginRequest.getLogin());
+        loginDto.setPassword(loginRequest.getPassword());
+        Optional<User> userOpt = authService.login(loginDto);
         if (userOpt.isPresent()) {
-            Map<String, Object> response = Map.of(
+            return ResponseEntity.ok(Map.of(
                     "message", "Connexion réussie",
                     "user", userOpt.get()
-            );
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            ));
         } else {
-            Map<String, Object> response = Map.of(
-                    "message", "Identifiants invalides"
-            );
-            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of(
+                    "message", "Login ou mot de passe incorrect"
+            ));
         }
     }
 }
