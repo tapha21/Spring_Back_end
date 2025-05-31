@@ -12,7 +12,6 @@ public class EtudiantResponseDto {
     private String nom;
     private String prenom;
     private String telephone;
-    private int age;
     private String niveau;
     private String filiere;
     private ClasseResponseDto classe;

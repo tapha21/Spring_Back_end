@@ -11,7 +11,6 @@ public class EtudiantSimpleWebResponseDto {
     private String prenom;
     private String telephone;
     private String login;
-    private int age;
     private String niveau;
     private String filiere;
     private ClasseWebResponseDto classe;
