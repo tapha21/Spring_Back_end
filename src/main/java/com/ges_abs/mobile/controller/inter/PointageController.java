@@ -21,7 +21,7 @@ public interface PointageController {
     @GetMapping("/{id}")
     ResponseEntity<Pointage> getPointageById(@PathVariable String id);
 
-    @PostMapping
+    @PostMapping("/create")
     ResponseEntity<Pointage> createPointage(@RequestBody Pointage pointage);
 
     @PutMapping("/{id}")
