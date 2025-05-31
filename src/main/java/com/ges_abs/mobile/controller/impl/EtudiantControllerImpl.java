@@ -2,6 +2,7 @@ package com.ges_abs.mobile.controller.impl;
 
 import com.ges_abs.data.models.entity.Etudiant;
 import com.ges_abs.mobile.controller.inter.EtudiantController;
+import com.ges_abs.mobile.dto.request.LoginRequestDto;
 import com.ges_abs.services.inter.EtudiantService;
 import com.ges_abs.web.Mapper.EtudiantWebMapper;
 import org.springframework.data.domain.Page;
@@ -59,5 +60,10 @@ public class EtudiantControllerImpl implements EtudiantController {
         response.put("totalItems", etudiants.getTotalElements());
         response.put("totalPages", etudiants.getTotalPages());
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> login(LoginRequestDto loginRequest) {
+        return null;
     }
 }

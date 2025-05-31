@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Map;
 @RequestMapping("/api/mobile/etudiants")
-public interface EtudiantController {
+public interface EtudiantController extends AuthController{
     ResponseEntity<Map<String, Object>> getAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
