@@ -131,9 +131,9 @@ public class AbsenceControllerImpl implements AbsenceController {
         absence.setEtat(Etat.JUSTIFIE);
         Evenement updated = absenceService.update(absence);
         AbsenceWebResponseDto dto = AbsenceWebMapper.INSTANCE.toDto(updated);
-        Map<String, Object> response = new HashMap<>();
-        response.put("message", "Justificatif ajouté avec succès");
-        response.put("data", dto);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(Map.of(
+                "message", "Justificatif ajouté avec succès",
+                "data", dto
+        ), HttpStatus.OK);
     }
 }

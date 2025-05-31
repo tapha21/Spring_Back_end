@@ -32,7 +32,7 @@ public interface AbsenceWebController {
     );
     @GetMapping("/filtre")
     ResponseEntity<Map<String, Object>> obtenirAbsencesParEtudiantEtPeriode(String etudiantId, String dateDebut, String dateFin, int page, int taille);
-    @GetMapping("/ajouter_justificatif")
+    @PostMapping("/ajouter_justificatif/{id}")
     ResponseEntity<Map<String, Object>> addJustificatif(
             @PathVariable String id,
             @RequestBody Map<String, String> payload

@@ -36,7 +36,7 @@ public interface AbsenceController {
             @RequestParam String dateDebut,
             @RequestParam String dateFin
     );
-    @GetMapping("/ajouter_justificatif")
+    @PostMapping("/ajouter_justificatif/{id}")
     ResponseEntity<Map<String, Object>> addJustificatif(
             @PathVariable String id,
             @RequestBody Map<String, String> payload
