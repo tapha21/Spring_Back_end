@@ -23,6 +23,7 @@ public class Etudiant extends User {
     private String niveau;
     private String filiere;
     private String matricule;
+    private String codeQR;
     @DBRef
     private Classe classe;
     @DBRef

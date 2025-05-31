@@ -19,6 +19,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = false)
 @Document(collection = "vigile")
 public class Vigile extends User{
+    private String codeQR;
     @DBRef
     private List<Pointage> pointageList = new ArrayList<>();
 

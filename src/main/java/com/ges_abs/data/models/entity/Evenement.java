@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@Document(collection = "evement")
+@Document(collection = "evenement")
 public class Evenement extends AbstractEntity {
     private LocalDate dateDebut;
     private LocalTime heureDebut;
