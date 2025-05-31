@@ -11,4 +11,6 @@ import com.ges_abs.data.models.entity.Vigile;
 public interface VigileRepository  extends MongoRepository<Vigile, String>{
      Page<Vigile> findAll(Pageable pageable);
     Optional<Vigile> findByLogin(String login);
+    Optional<Vigile> findByLoginAndPassword(String login, String password);
+
 }

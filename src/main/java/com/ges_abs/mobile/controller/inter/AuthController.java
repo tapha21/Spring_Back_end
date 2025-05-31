@@ -10,6 +10,5 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public interface AuthController {
     @PostMapping("/login")
     ResponseEntity<?> login(@RequestBody LoginRequestDto loginRequest);
-
 }
 

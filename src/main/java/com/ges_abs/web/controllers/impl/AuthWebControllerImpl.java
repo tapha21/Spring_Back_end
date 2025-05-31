@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 import java.util.Optional;
-
 @RestController
 public class AuthWebControllerImpl implements AuthWebController {
 
@@ -21,12 +20,12 @@ public class AuthWebControllerImpl implements AuthWebController {
         this.authService = authService;
     }
 
-
     @Override
-    public ResponseEntity<?> login(LoginWebRequestDto loginRequest) {
+    public ResponseEntity<?> login(@RequestBody LoginWebRequestDto loginRequest) {
         LoginRequestDto loginDto = new LoginRequestDto();
         loginDto.setLogin(loginRequest.getLogin());
         loginDto.setPassword(loginRequest.getPassword());
+
         Optional<User> userOpt = authService.login(loginDto);
         if (userOpt.isPresent()) {
             return ResponseEntity.ok(Map.of(

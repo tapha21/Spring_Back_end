@@ -12,7 +12,6 @@ import org.mapstruct.factory.Mappers;
 public interface AbsenceWebMapper {
     AbsenceWebMapper INSTANCE = Mappers.getMapper(AbsenceWebMapper.class);
 
-    @Mapping(target = "etudiantId", source = "etudiant.id")
     AbsenceWebResponseDto toDto(Evenement absence);
     Evenement ToEntity(AbsenceWebRequestDto userDto);
 

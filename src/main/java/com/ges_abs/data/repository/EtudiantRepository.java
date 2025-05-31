@@ -13,4 +13,7 @@ public interface EtudiantRepository extends MongoRepository<Etudiant, String> {
     Etudiant findByMatriculeAndPassword(String matricule, String password);
     Optional<Etudiant> findById(String id);
     Optional<Etudiant> findByLogin(String login);
+    Optional<Etudiant> findByLoginAndPassword(String login, String password);
+
+
 }

@@ -9,6 +9,8 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import com.ges_abs.data.models.entity.User;
 import com.ges_abs.data.models.enumeration.Role;
 
+import java.util.Optional;
+
 public interface UserRepository extends MongoRepository<User, String> {
-    Page<User>findByLoginAndPassword(String login, String password, Pageable pageable);
+    Optional<User> findByLoginAndPassword(String login, String password);
 }
