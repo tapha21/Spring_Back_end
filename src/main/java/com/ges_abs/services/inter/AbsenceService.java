@@ -24,5 +24,6 @@ public interface AbsenceService {
         Page<Evenement> findByEtudiantId(String etudiantId, Pageable pageable);
         Page<Evenement> findEtudiantByEtat(String etudiantId, Etat etat, Pageable pageable);
         Page<Evenement> findByEtudiantIdAndPeriode(String etudiantId, LocalDate dateDebut, LocalDate dateFin, Pageable pageable);
-
+        Evenement addJustificatif(String evenementId, String justification);
+        Evenement update(Evenement evenement);
 }

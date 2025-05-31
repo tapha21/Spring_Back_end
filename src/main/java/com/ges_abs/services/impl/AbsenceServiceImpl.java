@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AbsenceServiceImpl  implements AbsenceService {
@@ -84,6 +85,25 @@ public class AbsenceServiceImpl  implements AbsenceService {
     @Override
     public Page<Evenement> findByEtudiantIdAndPeriode(String etudiantId, LocalDate dateDebut, LocalDate dateFin, Pageable pageable) {
         return absenceRepository.findByEtudiantIdAndDateDebut(etudiantId, dateDebut, dateFin, pageable);
+    }
+
+    @Override
+    public Evenement addJustificatif(String evenementId, String justification) {
+        Optional<Evenement> optional = absenceRepository.findById(evenementId);
+        if (optional.isPresent()) {
+            Evenement evenement = optional.get();
+            evenement.setJustification(justification);
+            evenement.setEtat(Etat.JUSTIFIE);
+            return absenceRepository.save(evenement);
+        } else {
+            throw new RuntimeException("Événement non trouvé avec l'ID : " + evenementId);
+        }
+    }
+
+    @Override
+    public Evenement update(Evenement evenement) {
+        return absenceRepository.save(evenement);
+
     }
 
 }

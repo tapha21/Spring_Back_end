@@ -148,6 +148,33 @@ public class AbsenceWebControllerImpl implements AbsenceWebController {
         return new ResponseEntity<>(reponse, HttpStatus.OK);
     }
 
+    @Override
+    public ResponseEntity<Map<String, Object>> addJustificatif(String id, Map<String, String> payload) {
+        Evenement absence = absenceService.findById(id);
+        if (absence == null) {
+            return new ResponseEntity<>(Map.of(
+                    "message", "Absence non trouvée",
+                    "status", "error"
+            ), HttpStatus.NOT_FOUND);
+        }
+        String justification = payload.get("justification");
+        if (justification == null || justification.trim().isEmpty()) {
+            return new ResponseEntity<>(Map.of(
+                    "message", "La justification est requise",
+                    "status", "error"
+            ), HttpStatus.BAD_REQUEST);
+        }
+        absence.setJustification(justification);
+        absence.setEtat(Etat.JUSTIFIE);
+        Evenement updated = absenceService.update(absence);
+        AbsenceWebResponseDto dto = AbsenceWebMapper.INSTANCE.toDto(updated);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "Justificatif ajouté avec succès");
+        response.put("data", dto);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 
 
 }

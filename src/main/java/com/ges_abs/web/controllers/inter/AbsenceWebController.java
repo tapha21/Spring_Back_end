@@ -30,7 +30,11 @@ public interface AbsenceWebController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     );
-    @GetMapping("filtre")
+    @GetMapping("/filtre")
     ResponseEntity<Map<String, Object>> obtenirAbsencesParEtudiantEtPeriode(String etudiantId, String dateDebut, String dateFin, int page, int taille);
-
+    @GetMapping("/ajouter_justificatif")
+    ResponseEntity<Map<String, Object>> addJustificatif(
+            @PathVariable String id,
+            @RequestBody Map<String, String> payload
+    );
 }

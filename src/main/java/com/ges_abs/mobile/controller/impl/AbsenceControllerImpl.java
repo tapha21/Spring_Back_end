@@ -7,10 +7,12 @@ import com.ges_abs.mobile.controller.inter.AbsenceController;
 import com.ges_abs.services.inter.AbsenceService;
 import com.ges_abs.web.Mapper.AbsenceWebMapper;
 import com.ges_abs.web.dto.response.AbsenceWebResponseDto;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -108,5 +110,30 @@ public class AbsenceControllerImpl implements AbsenceController {
                 "message", "Liste des absences de l'étudiant " + etudiantId + " entre le " + dateDebut + " et le " + dateFin,
                 "data", data
         ));
+    }
+    @Override
+    public ResponseEntity<Map<String, Object>> addJustificatif(String id, Map<String, String> payload) {
+        Evenement absence = absenceService.findById(id);
+        if (absence == null) {
+            return new ResponseEntity<>(Map.of(
+                    "message", "Absence non trouvée",
+                    "status", "error"
+            ), HttpStatus.NOT_FOUND);
+        }
+        String justification = payload.get("justification");
+        if (justification == null || justification.trim().isEmpty()) {
+            return new ResponseEntity<>(Map.of(
+                    "message", "La justification est requise",
+                    "status", "error"
+            ), HttpStatus.BAD_REQUEST);
+        }
+        absence.setJustification(justification);
+        absence.setEtat(Etat.JUSTIFIE);
+        Evenement updated = absenceService.update(absence);
+        AbsenceWebResponseDto dto = AbsenceWebMapper.INSTANCE.toDto(updated);
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "Justificatif ajouté avec succès");
+        response.put("data", dto);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
