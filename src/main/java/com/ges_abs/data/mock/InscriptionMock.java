@@ -17,8 +17,8 @@ import com.ges_abs.data.repository.InscriptionRepository;
 import java.time.LocalDate;
 
 @Slf4j
-@Order(7)
-@Component
+//@Order(7)
+//@Component
 public class InscriptionMock implements CommandLineRunner {
 
     private final InscriptionRepository inscriptionRepository;

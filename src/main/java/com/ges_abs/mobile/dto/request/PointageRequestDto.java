@@ -1,6 +1,5 @@
 package com.ges_abs.mobile.dto.request;
 
-<<<<<<< HEAD
 import com.ges_abs.data.models.entity.Pointage;
 import lombok.Builder;
 import lombok.Data;
@@ -17,13 +16,3 @@ public class PointageRequestDto {
     private String etudiantId;
     private Pointage pointage;
 }
-=======
-import jakarta.validation.constraints.NotBlank;
-import lombok.Data;
-
-@Data
-public class PointageRequestDto {
-    @NotBlank
-    private String matricule;
-}
->>>>>>> dev/safietou_deme_diop

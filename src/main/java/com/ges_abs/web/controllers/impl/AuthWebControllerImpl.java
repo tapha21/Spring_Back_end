@@ -6,6 +6,7 @@ import com.ges_abs.services.inter.AuthService;
 import com.ges_abs.web.controllers.inter.AuthWebController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 import java.util.Optional;
@@ -20,7 +21,7 @@ public class AuthWebControllerImpl implements AuthWebController {
     }
 
     @Override
-    public ResponseEntity<Map<String, Object>> login(LoginRequestDto loginRequest) {
+    public ResponseEntity<Map<String, Object>> login(@RequestBody LoginRequestDto loginRequest) {
         Optional<User> userOpt = authService.login(loginRequest);
         if (userOpt.isPresent()) {
             Map<String, Object> response = Map.of(

@@ -15,7 +15,8 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
+//@Order(5)
+//@Component
 public class AbsenceMock implements CommandLineRunner {
 
     private final EtudiantRepository etudiantRepository;

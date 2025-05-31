@@ -10,8 +10,8 @@ import org.springframework.stereotype.Component;
 import java.util.Arrays;
 import java.util.List;
 
-@Order(1)
-@Component
+//@Order(1)
+//@Component
 public class VigileMock implements CommandLineRunner {
 
     private final VigileRepository vigileRepository;

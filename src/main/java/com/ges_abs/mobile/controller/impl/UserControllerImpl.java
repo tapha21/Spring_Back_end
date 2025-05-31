@@ -2,6 +2,7 @@ package com.ges_abs.mobile.controller.impl;
 
 import com.ges_abs.data.models.entity.User;
 import com.ges_abs.data.models.enumeration.Role;
+import com.ges_abs.mobile.controller.inter.UserController;
 import com.ges_abs.services.inter.UserService;
 import com.ges_abs.web.Mapper.UserWebMapper;
 import com.ges_abs.web.controllers.inter.UserWebController;
@@ -16,14 +17,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-public class UserControllerImpl implements UserWebController {
+public class UserControllerImpl implements UserController {
     private final UserService userService;
     public UserControllerImpl(UserService userService) {
         this.userService = userService;
     }
 
+
+
     @Override
-    public ResponseEntity<Map<String, Object>> getAll(Pageable pageable, int page, int size) {
+    public ResponseEntity<Map<String, Object>> getAll(int page, int size) {
         Pageable effectivePageable = PageRequest.of(page, size);
         Page<User> users = userService.findAllPaginate(effectivePageable);
         var data = users.getContent().stream()

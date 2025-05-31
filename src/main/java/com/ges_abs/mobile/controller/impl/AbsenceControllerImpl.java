@@ -54,43 +54,56 @@ public class AbsenceControllerImpl implements AbsenceController {
     @Override
     public ResponseEntity<Map<String, Object>> getByEtat(String etat) {
         Etat etatEnum = Etat.valueOf(etat.toUpperCase());
-        List<Evenement> absences = absenceService.findByEtat(etatEnum);
-        List<AbsenceWebResponseDto> data = absences.stream()
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Evenement> absencesPage = absenceService.findByEtat(etatEnum, pageable);
+        List<AbsenceWebResponseDto> data = absencesPage.getContent()
+                .stream()
                 .map(AbsenceWebMapper.INSTANCE::toDto)
                 .toList();
-
         Map<String, Object> response = Map.of(
                 "message", "Absences par état : " + etat,
-                "data", data
+                "data", data,
+                "totalPages", absencesPage.getTotalPages(),
+                "totalElements", absencesPage.getTotalElements()
         );
         return ResponseEntity.ok(response);
     }
 
+
     @Override
     public ResponseEntity<Map<String, Object>> getByType(String type) {
         Type typeEnum = Type.valueOf(type.toUpperCase());
-        List<Evenement> absences = absenceService.findByType(typeEnum);
-        List<AbsenceWebResponseDto> data = absences.stream()
+        Pageable pageable = PageRequest.of(0, 10);
+
+        Page<Evenement> absencesPage = absenceService.findByType(typeEnum, pageable);
+
+        List<AbsenceWebResponseDto> data = absencesPage.getContent()
+                .stream()
                 .map(AbsenceWebMapper.INSTANCE::toDto)
                 .toList();
 
         Map<String, Object> response = Map.of(
                 "message", "Absences par type : " + type,
-                "data", data
+                "data", data,
+                "totalPages", absencesPage.getTotalPages(),
+                "totalElements", absencesPage.getTotalElements()
         );
         return ResponseEntity.ok(response);
     }
 
     @Override
     public ResponseEntity<Map<String, Object>> getByEtudiant(String etudiantId) {
-        List<Evenement> absences = absenceService.findByEtudiantId(etudiantId);
-        List<AbsenceWebResponseDto> data = absences.stream()
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Evenement> absencesPage = absenceService.findByEtudiantId(etudiantId, pageable);
+        List<AbsenceWebResponseDto> data = absencesPage.getContent()
+                .stream()
                 .map(AbsenceWebMapper.INSTANCE::toDto)
                 .toList();
-
         Map<String, Object> response = Map.of(
                 "message", "Absences de l'étudiant ID : " + etudiantId,
-                "data", data
+                "data", data,
+                "totalPages", absencesPage.getTotalPages(),
+                "totalElements", absencesPage.getTotalElements()
         );
         return ResponseEntity.ok(response);
     }
@@ -98,14 +111,17 @@ public class AbsenceControllerImpl implements AbsenceController {
     @Override
     public ResponseEntity<Map<String, Object>> getEtudiantAbsenceByEtat(String etat, String etudiantId) {
         Etat etatEnum = Etat.valueOf(etat.toUpperCase());
-        List<Evenement> absences = absenceService.findEtudiantByEtat(etudiantId, etatEnum);
-        List<AbsenceWebResponseDto> data = absences.stream()
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Evenement> absencesPage = absenceService.findEtudiantByEtat(etudiantId, etatEnum, pageable);
+        List<AbsenceWebResponseDto> data = absencesPage.getContent()
+                .stream()
                 .map(AbsenceWebMapper.INSTANCE::toDto)
                 .toList();
-
         Map<String, Object> response = Map.of(
                 "message", "Absences de l'étudiant " + etudiantId + " avec l'état : " + etat,
-                "data", data
+                "data", data,
+                "totalPages", absencesPage.getTotalPages(),
+                "totalElements", absencesPage.getTotalElements()
         );
         return ResponseEntity.ok(response);
     }
@@ -114,16 +130,19 @@ public class AbsenceControllerImpl implements AbsenceController {
     public ResponseEntity<Map<String, Object>> obtenirAbsencesParEtudiantEtPeriode(String etudiantId, String dateDebut, String dateFin) {
         LocalDate debut = LocalDate.parse(dateDebut);
         LocalDate fin = LocalDate.parse(dateFin);
-
-        List<Evenement> absences = absenceService.findByEtudiantIdAndPeriode(etudiantId, debut, fin);
-        List<AbsenceWebResponseDto> data = absences.stream()
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Evenement> absencesPage = absenceService.findByEtudiantIdAndPeriode(etudiantId, debut, fin, pageable);
+        List<AbsenceWebResponseDto> data = absencesPage.getContent()
+                .stream()
                 .map(AbsenceWebMapper.INSTANCE::toDto)
                 .toList();
-
         Map<String, Object> response = Map.of(
                 "message", "Liste des absences de l'étudiant " + etudiantId + " entre le " + dateDebut + " et le " + dateFin,
-                "data", data
+                "data", data,
+                "totalPages", absencesPage.getTotalPages(),
+                "totalElements", absencesPage.getTotalElements()
         );
         return ResponseEntity.ok(response);
     }
+
 }

@@ -1,6 +1,7 @@
 package com.ges_abs.mobile.controller.impl;
 
 import com.ges_abs.data.models.entity.Session;
+import com.ges_abs.mobile.controller.inter.SessionController;
 import com.ges_abs.services.inter.SessionService;
 import com.ges_abs.web.Mapper.SessionWebMapper;
 import com.ges_abs.web.controllers.inter.SessionWebController;
@@ -15,15 +16,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-public class SessionControllerImpl implements SessionWebController {
+public class SessionControllerImpl implements SessionController {
     private final SessionService sessionService;
 
     public SessionControllerImpl(SessionService sessionService) {
         this.sessionService = sessionService;
     }
 
+
+
     @Override
-    public ResponseEntity<Map<String, Object>> getAll(Pageable pageable, int page, int size) {
+    public ResponseEntity<Map<String, Object>> getAll(int page, int size) {
         Pageable effectivePageable = PageRequest.of(page, size);
         Page<Session> sessions = sessionService.findAllPaginate(effectivePageable);
         var data = sessions.getContent().stream()
@@ -35,8 +38,7 @@ public class SessionControllerImpl implements SessionWebController {
         response.put("currentPage", sessions.getNumber());
         response.put("totalItems", sessions.getTotalElements());
         response.put("totalPages", sessions.getTotalPages());
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
+        return new ResponseEntity<>(response, HttpStatus.OK);    }
 
     @Override
     public ResponseEntity<Map<String, Object>> getById(String id) {

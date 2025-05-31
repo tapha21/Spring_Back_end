@@ -13,7 +13,8 @@ import java.util.Map;
 public interface UserController {
 
     @GetMapping("")
-    ResponseEntity<Map<String, Object>> getAll();
+    ResponseEntity<Map<String, Object>> getAll(  @RequestParam(defaultValue = "0") int page,
+                                                 @RequestParam(defaultValue = "10") int size);
 
     @GetMapping("/role/{role}")
     ResponseEntity<Map<String, Object>> getByRole(@PathVariable String role);
