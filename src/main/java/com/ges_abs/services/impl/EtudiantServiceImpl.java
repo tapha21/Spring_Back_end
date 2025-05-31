@@ -8,6 +8,8 @@ import com.ges_abs.data.models.entity.Etudiant;
 import com.ges_abs.services.inter.EtudiantService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class EtudiantServiceImpl implements EtudiantService {
     EtudiantRepository etudiantRepository;
@@ -22,6 +24,16 @@ public class EtudiantServiceImpl implements EtudiantService {
     @Override
     public Page<Etudiant> findAll(Pageable pageable) {
         return etudiantRepository.findAll(pageable);
+    }
+
+    @Override
+    public List<Etudiant> findAll() {
+        return etudiantRepository.findAll();
+    }
+
+    @Override
+    public List<Etudiant> findByMatricule(String matricule) {
+        return etudiantRepository.findByMatricule(matricule);
     }
 
     @Override

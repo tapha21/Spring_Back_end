@@ -11,10 +11,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.Map;
 @RequestMapping("/api/mobile/etudiants")
 public interface EtudiantController {
-    ResponseEntity<Map<String, Object>> getAll(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
-    );
+    @GetMapping
+    ResponseEntity<Map<String, Object>> getAll();
 
     @GetMapping("/{matricule}")
     ResponseEntity<Map<String, Object>> getByMatricule(@PathVariable String matricule);

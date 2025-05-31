@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -23,22 +24,18 @@ public class SessionControllerImpl implements SessionController {
         this.sessionService = sessionService;
     }
 
-
-
     @Override
-    public ResponseEntity<Map<String, Object>> getAll(int page, int size) {
-        Pageable effectivePageable = PageRequest.of(page, size);
-        Page<Session> sessions = sessionService.findAllPaginate(effectivePageable);
-        var data = sessions.getContent().stream()
+    public ResponseEntity<Map<String, Object>> getAll() {
+        List<Session> sessions = sessionService.findAll();
+        var data = sessions.stream()
                 .map(SessionWebMapper.INSTANCE::toDto)
                 .toList();
         Map<String, Object> response = new HashMap<>();
         response.put("message", "Liste des sessions");
         response.put("data", data);
-        response.put("currentPage", sessions.getNumber());
-        response.put("totalItems", sessions.getTotalElements());
-        response.put("totalPages", sessions.getTotalPages());
-        return new ResponseEntity<>(response, HttpStatus.OK);    }
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
 
     @Override
     public ResponseEntity<Map<String, Object>> getById(String id) {

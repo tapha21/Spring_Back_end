@@ -22,8 +22,35 @@ public class AbsenceServiceImpl  implements AbsenceService {
 
     @Override
     public List<Evenement> findAll() {
-        return List.of();
+        return absenceRepository.findAll();
     }
+
+    @Override
+    public List<Evenement> findByEtat(Etat etat) {
+        return absenceRepository.findByEtat(etat);
+    }
+
+    @Override
+    public List<Evenement> findByType(Type type) {
+        return absenceRepository.findByType(type);
+    }
+
+    @Override
+    public List<Evenement> findByEtudiantIdAndPeriode(String etudiantId, LocalDate dateDebut, LocalDate dateFin) {
+        return absenceRepository.findByEtudiantIdAndDateDebut(etudiantId, dateDebut, dateFin);
+    }
+
+    @Override
+    public List<Evenement> findByEtudiantId(String etudiantId) {
+        return absenceRepository.findByEtudiantId(etudiantId); // récupère par ID étudiant
+    }
+
+    @Override
+    public List<Evenement> findEtudiantByEtat(String etudiantId, Etat etat) {
+        return absenceRepository.findByEtudiantAndEtat(etudiantId, etat);
+    }
+
+
 
     @Override
     public Page<Evenement> findAllPaginate(Pageable pageable) {

@@ -13,10 +13,7 @@ import java.util.Optional;
 public interface PointageController {
 
     @GetMapping("")
-    ResponseEntity<Map<String, Object>> getAll(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size
-    );
+    ResponseEntity<Map<String, Object>> getAll();
 
     @GetMapping("/{id}")
     ResponseEntity<Pointage> getPointageById(@PathVariable String id);

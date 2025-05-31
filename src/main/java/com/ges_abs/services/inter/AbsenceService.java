@@ -12,6 +12,11 @@ import java.util.List;
 
 public interface AbsenceService {
         List<Evenement> findAll();
+        List<Evenement> findByEtat(Etat etat);
+        List<Evenement> findByType(Type type);
+        List<Evenement> findByEtudiantIdAndPeriode(String etudiantId, LocalDate dateDebut, LocalDate dateFin);
+        List<Evenement> findByEtudiantId(String etudiantId);
+        List<Evenement> findEtudiantByEtat(String etudiantId, Etat etat);
         Page<Evenement> findAllPaginate(Pageable pageable);
         Evenement findById(String id);
         Page<Evenement> findByEtat(Etat etat, Pageable pageable);

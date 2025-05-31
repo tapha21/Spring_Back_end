@@ -9,6 +9,7 @@ import java.util.Optional;
 
 public interface PointageService {
     Page<Pointage> getAllPointages(Pageable pageable);
+    List<Pointage> getAllPointages();
 
     Optional<Pointage> getPointageById(String id);
 

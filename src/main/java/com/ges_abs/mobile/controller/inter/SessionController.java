@@ -13,10 +13,7 @@ import java.util.Map;
 public interface SessionController {
 
     @GetMapping("")
-    ResponseEntity<Map<String, Object>> getAll(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
-    );
+    ResponseEntity<Map<String, Object>> getAll();
 
     @GetMapping("/{id}")
     ResponseEntity<Map<String, Object>> getById(@PathVariable String id);

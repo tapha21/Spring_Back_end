@@ -17,10 +17,15 @@ public interface AbsenceRepository extends MongoRepository<Evenement, String> {
     Page<Evenement> findAll(Pageable pageable);
     Page<Evenement> findByEtat(Etat etat, Pageable pageable);
     Page<Evenement> findByType(Type type, Pageable pageable);
-    Optional<Evenement> findById(long id);
+    Optional<Evenement> findById(String id);
     Page<Evenement> findByEtudiant_Id(String etudiantId, Pageable pageable);
     List<Evenement> findAll();
     Page<Evenement> findEtudiantByEtat(Etat etat, String etudiantId, Pageable pageable);
     Page<Evenement> findByEtudiantIdAndDateDebut(String etudiantId, LocalDate dateDebut, LocalDate dateFin, Pageable pageable);
+    List<Evenement> findByEtat(Etat etat);
+    List<Evenement> findByType(Type type);
+    List<Evenement> findByEtudiantId(String etudiantId);
+    List<Evenement> findByEtudiantAndEtat(String etudiantId, Etat etat);
+    List<Evenement> findByEtudiantIdAndDateDebut(String etudiantId, LocalDate dateDebut, LocalDate dateFin);
 
 }

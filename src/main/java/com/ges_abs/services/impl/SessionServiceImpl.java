@@ -8,6 +8,8 @@ import com.ges_abs.data.models.entity.Session;
 import com.ges_abs.services.inter.SessionService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class SessionServiceImpl implements SessionService {
     SessionRepository sessionRepository;
@@ -22,5 +24,10 @@ public class SessionServiceImpl implements SessionService {
     @Override
     public Session findById(String id) {
         return sessionRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public List<Session> findAll() {
+        return sessionRepository.findAll();
     }
 }

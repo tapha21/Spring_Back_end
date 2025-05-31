@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -26,17 +27,11 @@ public class PointageControllerImpl implements PointageController {
     }
 
     @Override
-    public ResponseEntity<Map<String, Object>> getAll(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Pointage> pointagesPage = pointageService.getAllPointages(pageable);
-
+    public ResponseEntity<Map<String, Object>> getAll() {
+        List<Pointage> pointages = pointageService.getAllPointages();
         Map<String, Object> response = new HashMap<>();
-        response.put("message", "Liste des pointages");
-        response.put("data", pointagesPage.getContent());
-        response.put("currentPage", pointagesPage.getNumber());
-        response.put("totalItems", pointagesPage.getTotalElements());
-        response.put("totalPages", pointagesPage.getTotalPages());
-
+        response.put("pointages", pointages);
+        response.put("total", pointages.size());
         return ResponseEntity.ok(response);
     }
 
@@ -62,9 +57,6 @@ public class PointageControllerImpl implements PointageController {
         }
 
         Pointage existingPointage = existingPointageOpt.get();
-        // TODO: Met à jour les champs de existingPointage avec updatedPointage
-        // Exemple : existingPointage.setDate(updatedPointage.getDate());
-        // Complète selon les attributs de Pointage
 
         Pointage saved = pointageService.createPointage(existingPointage);
         return ResponseEntity.ok(saved);
@@ -77,7 +69,6 @@ public class PointageControllerImpl implements PointageController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        // Supposons que tu as une méthode delete dans le service (à créer si non existante)
         pointageService.deletePointage(id);
         return ResponseEntity.noContent().build();
     }

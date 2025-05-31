@@ -17,7 +17,6 @@ import java.util.Map;
 
 @RestController
 public class EtudiantControllerImpl implements EtudiantController {
-
     private final EtudiantService etudiantService;
 
     public EtudiantControllerImpl(EtudiantService etudiantService) {
@@ -25,39 +24,28 @@ public class EtudiantControllerImpl implements EtudiantController {
     }
 
     @Override
-    public ResponseEntity<Map<String, Object>> getAll(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Etudiant> etudiantsPage = etudiantService.findAll(pageable);
-
-        var data = etudiantsPage.getContent()
-                .stream()
+    public ResponseEntity<Map<String, Object>> getAll() {
+        List<Etudiant> etudiants = etudiantService.findAll();
+        var data = etudiants.stream()
                 .map(EtudiantWebMapper.INSTANCE::toComplet)
                 .toList();
-
         Map<String, Object> response = new HashMap<>();
-        response.put("message", "Liste paginée des étudiants");
+        response.put("message", "Liste complète des étudiants");
         response.put("data", data);
-        response.put("currentPage", etudiantsPage.getNumber());
-        response.put("totalItems", etudiantsPage.getTotalElements());
-        response.put("totalPages", etudiantsPage.getTotalPages());
 
         return ResponseEntity.ok(response);
     }
 
     @Override
     public ResponseEntity<Map<String, Object>> getByMatricule(String matricule) {
-        Pageable pageable = PageRequest.of(0, 5);
-        Page<Etudiant> etudiants = etudiantService.findByMatricule(matricule, pageable);
-        var data = etudiants.getContent()
-                .stream()
+        List<Etudiant> etudiants = etudiantService.findByMatricule(matricule);
+        var data = etudiants.stream()
                 .map(EtudiantWebMapper.INSTANCE::toDto)
                 .toList();
         Map<String, Object> response = new HashMap<>();
         response.put("message", "Résultats de recherche pour le matricule : " + matricule);
         response.put("data", data);
-        response.put("currentPage", etudiants.getNumber());
-        response.put("totalItems", etudiants.getTotalElements());
-        response.put("totalPages", etudiants.getTotalPages());
+
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
