@@ -1,16 +1,13 @@
-package com.ges_abs.mobile.controller.inter;
+package com.ges_abs.web.controllers.inter;
 
 import com.ges_abs.data.models.entity.Pointage;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
-import java.util.Optional;
 
-@RequestMapping("/api/pointages")
-public interface PointageController {
+@RequestMapping("/api/web/pointages")
+public interface PointageWebController {
 
     @GetMapping("")
     ResponseEntity<Map<String, Object>> getAll(

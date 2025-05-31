@@ -1,9 +1,11 @@
 package com.ges_abs.web.controllers.impl;
-import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.ges_abs.data.models.entity.Evenement;
+import com.ges_abs.data.models.enumeration.Etat;
+import com.ges_abs.data.models.enumeration.Type;
+import com.ges_abs.services.inter.AbsenceService;
+import com.ges_abs.web.Mapper.AbsenceWebMapper;
+import com.ges_abs.web.controllers.inter.AbsenceWebController;
+import com.ges_abs.web.dto.response.AbsenceWebResponseDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -11,18 +13,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ges_abs.data.models.entity.Evenement;
-import com.ges_abs.data.models.enumeration.Etat;
-import com.ges_abs.data.models.enumeration.Type;
-import com.ges_abs.services.inter.AbsenceService;
-import com.ges_abs.web.Mapper.AbsenceMapper;
-import com.ges_abs.web.controllers.inter.AbsenceController;
-import com.ges_abs.web.dto.response.AbsenceResponseDto;
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
-public class AbsenceControllerImpl implements AbsenceController {
+public class AbsenceWebControllerImpl implements AbsenceWebController {
     private final AbsenceService absenceService;
-    public AbsenceControllerImpl(AbsenceService absenceService) {
+    public AbsenceWebControllerImpl(AbsenceService absenceService) {
         this.absenceService = absenceService;
     }
 
@@ -31,7 +30,7 @@ public class AbsenceControllerImpl implements AbsenceController {
         Pageable effectivePageable = PageRequest.of(page, size);
         Page<Evenement> absences = absenceService.findAllPaginate(effectivePageable);
         var data = absences.getContent().stream()
-                .map(AbsenceMapper.INSTANCE::toDto)
+                .map(AbsenceWebMapper.INSTANCE::toDto)
                 .toList();
         Map<String, Object> response = new HashMap<>();
         response.put("message", "Liste des absences");
@@ -45,7 +44,7 @@ public class AbsenceControllerImpl implements AbsenceController {
     @Override
     public ResponseEntity<Map<String, Object>> getById(String id) {
         Evenement absence = absenceService.findById(id);
-        var dto = AbsenceMapper.INSTANCE.toDto(absence);
+        var dto = AbsenceWebMapper.INSTANCE.toDto(absence);
         Map<String, Object> response = Map.of(
                 "message", "Absence trouvée",
                 "data", dto
@@ -59,7 +58,7 @@ public class AbsenceControllerImpl implements AbsenceController {
         Pageable pageable = PageRequest.of(0, 10); // à adapter si besoin
         var absences = absenceService.findByEtat(etatEnum, pageable);
         var data = absences.getContent().stream()
-                .map(AbsenceMapper.INSTANCE::toDto)
+                .map(AbsenceWebMapper.INSTANCE::toDto)
                 .toList();
         Map<String, Object> response = Map.of(
                 "message", "Absences par état : " + etat,
@@ -74,7 +73,7 @@ public class AbsenceControllerImpl implements AbsenceController {
         Pageable pageable = PageRequest.of(0, 10);
         var absences = absenceService.findByType(typeEnum, pageable);
         var data = absences.getContent().stream()
-                .map(AbsenceMapper.INSTANCE::toDto)
+                .map(AbsenceWebMapper.INSTANCE::toDto)
                 .toList();
         Map<String, Object> response = Map.of(
                 "message", "Absences par type : " + type,
@@ -88,7 +87,7 @@ public class AbsenceControllerImpl implements AbsenceController {
         Pageable pageable = PageRequest.of(0, 10);
         var absences = absenceService.findByEtudiantId(etudiantId, pageable);
         var data = absences.getContent().stream()
-                .map(AbsenceMapper.INSTANCE::toDto)
+                .map(AbsenceWebMapper.INSTANCE::toDto)
                 .toList();
         Map<String, Object> response = Map.of(
                 "message", "Absences de l'étudiant ID : " + etudiantId,
@@ -107,8 +106,8 @@ public class AbsenceControllerImpl implements AbsenceController {
         Etat etatEnum = Etat.valueOf(etat.toUpperCase());
         Pageable pageable = PageRequest.of(page, size);
         Page<Evenement> absences = absenceService.findEtudiantByEtat(etudiantId, etatEnum, pageable);
-        List<AbsenceResponseDto> data = absences.getContent().stream()
-                .map(AbsenceMapper.INSTANCE::toDto)
+        List<AbsenceWebResponseDto> data = absences.getContent().stream()
+                .map(AbsenceWebMapper.INSTANCE::toDto)
                 .toList();
         Map<String, Object> response = Map.of(
                 "message", "Absences de l'étudiant " + etudiantId + " avec l'état : " + etatEnum,
@@ -134,8 +133,8 @@ public class AbsenceControllerImpl implements AbsenceController {
 
         Page<Evenement> absences = absenceService.findByEtudiantIdAndPeriode(etudiantId, debut, fin, pageable);
 
-        List<AbsenceResponseDto> donnees = absences.getContent().stream()
-                .map(AbsenceMapper.INSTANCE::toDto)
+        List<AbsenceWebResponseDto> donnees = absences.getContent().stream()
+                .map(AbsenceWebMapper.INSTANCE::toDto)
                 .toList();
 
         Map<String, Object> reponse = Map.of(

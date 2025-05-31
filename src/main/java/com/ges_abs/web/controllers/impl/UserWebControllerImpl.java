@@ -3,8 +3,8 @@ package com.ges_abs.web.controllers.impl;
 import com.ges_abs.data.models.entity.User;
 import com.ges_abs.data.models.enumeration.Role;
 import com.ges_abs.services.inter.UserService;
-import com.ges_abs.web.Mapper.UserMapper;
-import com.ges_abs.web.controllers.inter.UserController;
+import com.ges_abs.web.Mapper.UserWebMapper;
+import com.ges_abs.web.controllers.inter.UserWebController;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,9 +17,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-public class UserControllerImpl implements UserController {
+public class UserWebControllerImpl implements UserWebController {
     private final UserService userService;
-    public UserControllerImpl(UserService userService) {
+    public UserWebControllerImpl(UserService userService) {
         this.userService = userService;
     }
 
@@ -28,7 +28,7 @@ public class UserControllerImpl implements UserController {
         Pageable effectivePageable = PageRequest.of(page, size);
         Page<User> users = userService.findAllPaginate(effectivePageable);
         var data = users.getContent().stream()
-                .map(UserMapper.INSTANCE::toDto)
+                .map(UserWebMapper.INSTANCE::toDto)
                 .toList();
 
         Map<String, Object> response = new HashMap<>();
@@ -53,7 +53,7 @@ public class UserControllerImpl implements UserController {
         Pageable pageable = PageRequest.of(0, 10); // pagination fixe par défaut
         Page<User> users = userService.findAllPaginate(pageable);
         var data = users.getContent().stream()
-                .map(UserMapper.INSTANCE::toDto)
+                .map(UserWebMapper.INSTANCE::toDto)
                 .toList();
 
         Map<String, Object> response = Map.of(

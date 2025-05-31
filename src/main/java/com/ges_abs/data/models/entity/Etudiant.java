@@ -31,6 +31,8 @@ public class Etudiant extends User {
     private List<EtudiantCours> etudiantCoursList = new ArrayList<>();
     @DBRef
     private List<Pointage> pointageList = new ArrayList<>();
+    @DBRef
+    private List<Evenement> evenementList = new ArrayList<>();
 
     public Etudiant(String login, String password, String nom, String prenom, String telephone, Role role, String dateNaissance, String niveau, String filiere, String matricule, Classe classe, List<EtudiantCours> etudiantCoursList, List<Inscription> inscriptionList, List<Pointage> pointageList) {
         super(login, password, nom, prenom, telephone, role);

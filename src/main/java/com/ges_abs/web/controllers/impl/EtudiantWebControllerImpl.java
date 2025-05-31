@@ -1,11 +1,9 @@
 package com.ges_abs.web.controllers.impl;
 
 import com.ges_abs.data.models.entity.Etudiant;
-import com.ges_abs.data.models.entity.Evenement;
 import com.ges_abs.services.inter.EtudiantService;
-import com.ges_abs.web.Mapper.AbsenceMapper;
-import com.ges_abs.web.Mapper.EtudiantMapper;
-import com.ges_abs.web.controllers.inter.EtudiantController;
+import com.ges_abs.web.Mapper.EtudiantWebMapper;
+import com.ges_abs.web.controllers.inter.EtudiantWebController;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -17,11 +15,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-public class EtudiantControllerImpl implements EtudiantController {
+public class EtudiantWebControllerImpl implements EtudiantWebController {
 
     private final EtudiantService etudiantService;
 
-    public EtudiantControllerImpl(EtudiantService etudiantService) {
+    public EtudiantWebControllerImpl(EtudiantService etudiantService) {
         this.etudiantService = etudiantService;
     }
 
@@ -30,7 +28,7 @@ public class EtudiantControllerImpl implements EtudiantController {
         Pageable effectivePageable = PageRequest.of(page, size);
         Page<Etudiant> etudiants = etudiantService.findAll(effectivePageable);
         var data = etudiants.getContent().stream()
-                .map(EtudiantMapper.INSTANCE::toComplet)
+                .map(EtudiantWebMapper.INSTANCE::toComplet)
                 .toList();
         Map<String, Object> response = new HashMap<>();
         response.put("message", "Liste des absences");
@@ -47,7 +45,7 @@ public class EtudiantControllerImpl implements EtudiantController {
         Page<Etudiant> etudiants = etudiantService.findByMatricule(matricule, pageable);
         var data = etudiants.getContent()
                 .stream()
-                .map(EtudiantMapper.INSTANCE::toDto)
+                .map(EtudiantWebMapper.INSTANCE::toDto)
                 .toList();
         Map<String, Object> response = new HashMap<>();
         response.put("message", "Résultats de recherche pour le matricule : " + matricule);

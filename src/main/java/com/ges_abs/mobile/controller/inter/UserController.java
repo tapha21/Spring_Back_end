@@ -9,17 +9,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Map;
-
-@RequestMapping("/api/users")
+@RequestMapping("/api/mobile/users")
 public interface UserController {
 
     @GetMapping("")
-    ResponseEntity<Map<String, Object>> getAll(
-            @PageableDefault Pageable pageable,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size
-    );
+    ResponseEntity<Map<String, Object>> getAll(  @RequestParam(defaultValue = "0") int page,
+                                                 @RequestParam(defaultValue = "10") int size);
 
     @GetMapping("/role/{role}")
     ResponseEntity<Map<String, Object>> getByRole(@PathVariable String role);
+
 }

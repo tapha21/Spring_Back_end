@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RequestMapping("/api/users")
-public interface UserController {
+public interface UserWebController {
 
     @GetMapping("")
     ResponseEntity<Map<String, Object>> getAll(

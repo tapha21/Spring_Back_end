@@ -2,8 +2,8 @@ package com.ges_abs.web.controllers.impl;
 
 import com.ges_abs.data.models.entity.Session;
 import com.ges_abs.services.inter.SessionService;
-import com.ges_abs.web.Mapper.SessionMapper;
-import com.ges_abs.web.controllers.inter.SessionController;
+import com.ges_abs.web.Mapper.SessionWebMapper;
+import com.ges_abs.web.controllers.inter.SessionWebController;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,10 +16,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-public class SessionControllerImpl implements SessionController {
+public class SessionWebControllerImpl implements SessionWebController {
     private final SessionService sessionService;
 
-    public SessionControllerImpl(SessionService sessionService) {
+    public SessionWebControllerImpl(SessionService sessionService) {
         this.sessionService = sessionService;
     }
 
@@ -28,7 +28,7 @@ public class SessionControllerImpl implements SessionController {
         Pageable effectivePageable = PageRequest.of(page, size);
         Page<Session> sessions = sessionService.findAllPaginate(effectivePageable);
         var data = sessions.getContent().stream()
-                .map(SessionMapper.INSTANCE::toDto)
+                .map(SessionWebMapper.INSTANCE::toDto)
                 .toList();
         Map<String, Object> response = new HashMap<>();
         response.put("message", "Liste des sessions");
@@ -42,7 +42,7 @@ public class SessionControllerImpl implements SessionController {
     @Override
     public ResponseEntity<Map<String, Object>> getById(String id) {
         Session session = sessionService.findById(id);
-        var dto = SessionMapper.INSTANCE.toDto(session);
+        var dto = SessionWebMapper.INSTANCE.toDto(session);
         Map<String, Object> response = Map.of(
                 "message", "Session trouvée",
                 "data", dto

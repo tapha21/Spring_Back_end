@@ -9,17 +9,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Map;
-
-@RequestMapping("/api/etudiants")
+@RequestMapping("/api/mobile/etudiants")
 public interface EtudiantController {
-
-    @GetMapping("")
     ResponseEntity<Map<String, Object>> getAll(
-            @PageableDefault Pageable pageable,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size
+            @RequestParam(defaultValue = "10") int size
     );
 
     @GetMapping("/{matricule}")
     ResponseEntity<Map<String, Object>> getByMatricule(@PathVariable String matricule);
+
 }

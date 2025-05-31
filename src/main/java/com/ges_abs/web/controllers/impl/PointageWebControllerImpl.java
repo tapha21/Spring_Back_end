@@ -1,8 +1,9 @@
-package com.ges_abs.mobile.controller.impl;
+package com.ges_abs.web.controllers.impl;
 
 import com.ges_abs.data.models.entity.Pointage;
 import com.ges_abs.mobile.controller.inter.PointageController;
 import com.ges_abs.services.inter.PointageService;
+import com.ges_abs.web.controllers.inter.PointageWebController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,12 +17,12 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-public class PointageControllerImpl implements PointageController {
+public class PointageWebControllerImpl implements PointageWebController {
 
     private final PointageService pointageService;
 
     @Autowired
-    public PointageControllerImpl(PointageService pointageService) {
+    public PointageWebControllerImpl(PointageService pointageService) {
         this.pointageService = pointageService;
     }
 
