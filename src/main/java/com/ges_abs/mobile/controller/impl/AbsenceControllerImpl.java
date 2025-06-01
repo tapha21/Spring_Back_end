@@ -127,18 +127,22 @@ public class AbsenceControllerImpl implements AbsenceController {
                     "status", "error"
             ), HttpStatus.NOT_FOUND);
         }
+        if (file == null || file.isEmpty()) {
+            return new ResponseEntity<>(Map.of(
+                    "message", "Le fichier justificatif est requis",
+                    "status", "error"
+            ), HttpStatus.BAD_REQUEST);
+        }
         try {
-            String base64 = Base64.getEncoder().encodeToString(file.getBytes());
-            absence.setJustification(base64);
+            String base64Image = Base64.getEncoder().encodeToString(file.getBytes());
+            absence.setJustificatifImage(base64Image);
             absence.setEtat(Etat.JUSTIFIE);
             Evenement updated = absenceService.update(absence);
             AbsenceWebResponseDto dto = AbsenceWebMapper.INSTANCE.toDto(updated);
-
             return new ResponseEntity<>(Map.of(
-                    "message", "Justificatif ajouté avec succès",
+                    "message", "Justificatif image ajouté avec succès",
                     "data", dto
             ), HttpStatus.OK);
-
         } catch (IOException e) {
             return new ResponseEntity<>(Map.of(
                     "message", "Erreur lors de la lecture du fichier",
@@ -147,6 +151,8 @@ public class AbsenceControllerImpl implements AbsenceController {
         }
     }
 
+    }
 
 
-}
+
+

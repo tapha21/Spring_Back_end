@@ -59,15 +59,16 @@ public class AbsenceWebControllerImpl implements AbsenceWebController {
 
     @Override
     public ResponseEntity<Map<String, Object>> getByEtat(String etat) {
-        Etat etatEnum = Etat.valueOf(etat.toUpperCase()); // conversion string -> Enum
-        Pageable pageable = PageRequest.of(0, 10); // à adapter si besoin
+        Etat etatEnum = Etat.valueOf(etat.toUpperCase());
+        Pageable pageable = PageRequest.of(0, 5);
         var absences = absenceService.findByEtat(etatEnum, pageable);
-        var data = absences.getContent().stream()
+        var filtered = absences.getContent().stream()
+                .filter(abs -> abs.getType() == Type.ABSENCE) // garde que les absences (exclut les retards)
                 .map(AbsenceWebMapper.INSTANCE::toDto)
                 .toList();
         Map<String, Object> response = Map.of(
                 "message", "Absences par état : " + etat,
-                "data", data
+                "data", filtered
         );
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
