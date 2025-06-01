@@ -76,7 +76,7 @@ public class AbsenceWebControllerImpl implements AbsenceWebController {
     @Override
     public ResponseEntity<Map<String, Object>> getByType(String type) {
         Type typeEnum = Type.valueOf(type.toUpperCase());
-        Pageable pageable = PageRequest.of(0, 10);
+        Pageable pageable = PageRequest.of(0, 5);
         var absences = absenceService.findByType(typeEnum, pageable);
         var data = absences.getContent().stream()
                 .map(AbsenceWebMapper.INSTANCE::toDto)
@@ -90,7 +90,7 @@ public class AbsenceWebControllerImpl implements AbsenceWebController {
 
     @Override
     public ResponseEntity<Map<String, Object>> getByEtudiant(String etudiantId) {
-        Pageable pageable = PageRequest.of(0, 10);
+        Pageable pageable = PageRequest.of(0, 5);
         var absences = absenceService.findByEtudiantId(etudiantId, pageable);
         var data = absences.getContent().stream()
                 .map(AbsenceWebMapper.INSTANCE::toDto)

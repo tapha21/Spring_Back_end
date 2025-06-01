@@ -41,7 +41,8 @@ public interface AbsenceController {
     @PostMapping(value = "/evenements/{id}/justificatif", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     ResponseEntity<Map<String, Object>> addJustificatif(
             @PathVariable String id,
-            @RequestPart("justificatif") MultipartFile file
+            @RequestPart("justificatif") MultipartFile file,
+            @RequestPart("commentaire") String commentaire
     );
 
 }

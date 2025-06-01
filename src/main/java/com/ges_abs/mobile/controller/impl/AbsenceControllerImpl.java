@@ -119,7 +119,7 @@ public class AbsenceControllerImpl implements AbsenceController {
     }
 
     @Override
-    public ResponseEntity<Map<String, Object>> addJustificatif(String id, MultipartFile file) {
+    public ResponseEntity<Map<String, Object>> addJustificatif(String id, MultipartFile file, String commentaire) {
         Evenement absence = absenceService.findById(id);
         if (absence == null) {
             return new ResponseEntity<>(Map.of(
@@ -150,6 +150,8 @@ public class AbsenceControllerImpl implements AbsenceController {
             ), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
 
     }
 
