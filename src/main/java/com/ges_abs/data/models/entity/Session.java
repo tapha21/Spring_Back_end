@@ -16,7 +16,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
+//@AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @Document(collection = "session")
@@ -26,10 +26,10 @@ public class Session extends AbstractEntity {
     private LocalTime heureFin;
     @DBRef
     private Cours cours;
-    @DBRef
-    private List<Pointage> pointages = new ArrayList<>();
-    @DBRef
-    private List<Evenement> evenements = new ArrayList<>();
+//    @DBRef
+//    private List<Pointage> pointages = new ArrayList<>();
+//    @DBRef
+//    private List<Evenement> evenements = new ArrayList<>();
 
     public Session(LocalDate date, LocalTime heureDebut, LocalTime heureFin, Cours cours) {
         this.date = date;

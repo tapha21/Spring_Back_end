@@ -25,18 +25,25 @@ public class SessionWebControllerImpl implements SessionWebController {
 
     @Override
     public ResponseEntity<Map<String, Object>> getAll(Pageable pageable, int page, int size) {
-        Pageable effectivePageable = PageRequest.of(page, size);
-        Page<Session> sessions = sessionService.findAllPaginate(effectivePageable);
-        var data = sessions.getContent().stream()
-                .map(SessionWebMapper.INSTANCE::toDto)
-                .toList();
-        Map<String, Object> response = new HashMap<>();
-        response.put("message", "Liste des sessions");
-        response.put("data", data);
-        response.put("currentPage", sessions.getNumber());
-        response.put("totalItems", sessions.getTotalElements());
-        response.put("totalPages", sessions.getTotalPages());
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        try {
+            Pageable effectivePageable = PageRequest.of(page, size);
+            Page<Session> sessions = sessionService.findAllPaginate(effectivePageable);
+            var data = sessions.getContent().stream()
+                    .map(SessionWebMapper.INSTANCE::toDto)
+                    .toList();
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "Liste des sessions");
+            response.put("data", data);
+            response.put("currentPage", sessions.getNumber());
+            response.put("totalItems", sessions.getTotalElements());
+            response.put("totalPages", sessions.getTotalPages());
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            Map<String, Object> error = new HashMap<>();
+            error.put("message", "Erreur lors de la récupération des sessions");
+            error.put("error", e.getMessage());
+            return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @Override

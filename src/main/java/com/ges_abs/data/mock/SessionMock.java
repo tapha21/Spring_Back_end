@@ -42,8 +42,8 @@ public class SessionMock implements CommandLineRunner {
                     session.setHeureDebut(LocalTime.of(8 + i, 0));
                     session.setHeureFin(LocalTime.of(10 + i, 0));
                     session.setCours(cours);
-                    session.setPointages(new ArrayList<>());
-                    session.setEvenements(new ArrayList<>());
+//                    session.setPointages(new ArrayList<>());
+//                    session.setEvenements(new ArrayList<>());
                     sessions.add(session);
                 }
             }
