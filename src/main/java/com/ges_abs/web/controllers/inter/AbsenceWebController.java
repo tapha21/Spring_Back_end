@@ -19,9 +19,17 @@ public interface AbsenceWebController {
     @GetMapping("/{id}")
     ResponseEntity<Map<String, Object>> getById(@PathVariable String id);
     @GetMapping("/etat/{etat}")
-    ResponseEntity<Map<String, Object>> getByEtat(@PathVariable String etat);
+    ResponseEntity<Map<String, Object>> getByEtat(
+            @PathVariable String etat,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size
+    );
     @GetMapping("/type/{type}")
-    ResponseEntity<Map<String, Object>> getByType(@PathVariable String type);
+    ResponseEntity<Map<String, Object>> getByType(
+            @PathVariable String type,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size
+    );
     @GetMapping("/etudiant/{etudiantId}")
     ResponseEntity<Map<String, Object>> getByEtudiant(@PathVariable String etudiantId);
     @GetMapping("/etudiant/etat/{etat}")

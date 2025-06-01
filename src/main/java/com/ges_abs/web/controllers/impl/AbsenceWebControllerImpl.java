@@ -58,33 +58,41 @@ public class AbsenceWebControllerImpl implements AbsenceWebController {
     }
 
     @Override
-    public ResponseEntity<Map<String, Object>> getByEtat(String etat) {
+    public ResponseEntity<Map<String, Object>> getByEtat(String etat, int page, int size) {
         Etat etatEnum = Etat.valueOf(etat.toUpperCase());
-        Pageable pageable = PageRequest.of(0, 5);
-        var absences = absenceService.findByEtat(etatEnum, pageable);
-        var filtered = absences.getContent().stream()
-                .filter(abs -> abs.getType() == Type.ABSENCE) // garde que les absences (exclut les retards)
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Evenement> absences = absenceService.findByEtat(etatEnum, pageable);
+        var data = absences.getContent().stream()
+                .filter(abs -> abs.getType() == Type.ABSENCE)
                 .map(AbsenceWebMapper.INSTANCE::toDto)
                 .toList();
-        Map<String, Object> response = Map.of(
-                "message", "Absences par état : " + etat,
-                "data", filtered
-        );
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "Absences par état : " + etatEnum);
+        response.put("data", data);
+        response.put("currentPage", absences.getNumber());
+        response.put("totalItems", absences.getTotalElements());
+        response.put("totalPages", absences.getTotalPages());
+
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+
     @Override
-    public ResponseEntity<Map<String, Object>> getByType(String type) {
+    public ResponseEntity<Map<String, Object>> getByType(String type, int page, int size) {
         Type typeEnum = Type.valueOf(type.toUpperCase());
-        Pageable pageable = PageRequest.of(0, 5);
-        var absences = absenceService.findByType(typeEnum, pageable);
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Evenement> absences = absenceService.findByType(typeEnum, pageable);
         var data = absences.getContent().stream()
                 .map(AbsenceWebMapper.INSTANCE::toDto)
                 .toList();
-        Map<String, Object> response = Map.of(
-                "message", "Absences par type : " + type,
-                "data", data
-        );
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "Absences par type : " + typeEnum);
+        response.put("data", data);
+        response.put("currentPage", absences.getNumber());
+        response.put("totalItems", absences.getTotalElements());
+        response.put("totalPages", absences.getTotalPages());
+
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
