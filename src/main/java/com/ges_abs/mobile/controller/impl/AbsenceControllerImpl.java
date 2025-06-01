@@ -17,6 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -118,7 +119,7 @@ public class AbsenceControllerImpl implements AbsenceController {
     }
 
     @Override
-    public ResponseEntity<Map<String, Object>> addJustificatif(String id, Map<String, String> payload) {
+    public ResponseEntity<Map<String, Object>> addJustificatif(String id, MultipartFile file) {
         Evenement absence = absenceService.findById(id);
         if (absence == null) {
             return new ResponseEntity<>(Map.of(
@@ -126,21 +127,26 @@ public class AbsenceControllerImpl implements AbsenceController {
                     "status", "error"
             ), HttpStatus.NOT_FOUND);
         }
-        String justification = payload.get("justification");
-        if (justification == null || justification.trim().isEmpty()) {
+        try {
+            String base64 = Base64.getEncoder().encodeToString(file.getBytes());
+            absence.setJustification(base64);
+            absence.setEtat(Etat.JUSTIFIE);
+            Evenement updated = absenceService.update(absence);
+            AbsenceWebResponseDto dto = AbsenceWebMapper.INSTANCE.toDto(updated);
+
             return new ResponseEntity<>(Map.of(
-                    "message", "La justification est requise",
+                    "message", "Justificatif ajouté avec succès",
+                    "data", dto
+            ), HttpStatus.OK);
+
+        } catch (IOException e) {
+            return new ResponseEntity<>(Map.of(
+                    "message", "Erreur lors de la lecture du fichier",
                     "status", "error"
-            ), HttpStatus.BAD_REQUEST);
+            ), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        absence.setJustification(justification);
-        absence.setEtat(Etat.JUSTIFIE);
-        Evenement updated = absenceService.update(absence);
-        AbsenceWebResponseDto dto = AbsenceWebMapper.INSTANCE.toDto(updated);
-        return new ResponseEntity<>(Map.of(
-                "message", "Justificatif ajouté avec succès",
-                "data", dto
-        ), HttpStatus.OK);
     }
+
+
 
 }
