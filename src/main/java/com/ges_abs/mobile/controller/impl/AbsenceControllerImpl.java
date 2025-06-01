@@ -10,11 +10,16 @@ import com.ges_abs.web.dto.response.AbsenceWebResponseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 public class AbsenceControllerImpl implements AbsenceController {
@@ -112,7 +117,7 @@ public class AbsenceControllerImpl implements AbsenceController {
         ));
     }
     @Override
-    public ResponseEntity<Map<String, Object>> addJustificatif(String id, Map<String, String> payload) {
+    public ResponseEntity<Map<String, Object>> addJustificatif(String id, String justification, MultipartFile file) {
         Evenement absence = absenceService.findById(id);
         if (absence == null) {
             return new ResponseEntity<>(Map.of(
@@ -120,20 +125,34 @@ public class AbsenceControllerImpl implements AbsenceController {
                     "status", "error"
             ), HttpStatus.NOT_FOUND);
         }
-        String justification = payload.get("justification");
         if (justification == null || justification.trim().isEmpty()) {
             return new ResponseEntity<>(Map.of(
                     "message", "La justification est requise",
                     "status", "error"
             ), HttpStatus.BAD_REQUEST);
         }
-        absence.setJustification(justification);
-        absence.setEtat(Etat.JUSTIFIE);
-        Evenement updated = absenceService.update(absence);
-        AbsenceWebResponseDto dto = AbsenceWebMapper.INSTANCE.toDto(updated);
-        return new ResponseEntity<>(Map.of(
-                "message", "Justificatif ajouté avec succès",
-                "data", dto
-        ), HttpStatus.OK);
+
+        try {
+            String uploadDir = "uploads/justificatifs/";
+            String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+            Path filePath = Paths.get(uploadDir + fileName);
+            Files.createDirectories(filePath.getParent());
+            Files.write(filePath, file.getBytes());
+            absence.setJustification(justification);
+            absence.setEtat(Etat.JUSTIFIE);
+            absence.setJustification("/" + uploadDir + fileName);
+            Evenement updated = absenceService.update(absence);
+
+            AbsenceWebResponseDto dto = AbsenceWebMapper.INSTANCE.toDto(updated);
+            return new ResponseEntity<>(Map.of(
+                    "message", "Justificatif ajouté avec succès",
+                    "data", dto
+            ), HttpStatus.OK);
+        } catch (IOException e) {
+            return new ResponseEntity<>(Map.of(
+                    "message", "Erreur lors de l'enregistrement du fichier",
+                    "status", "error"
+            ), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

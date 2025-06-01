@@ -8,7 +8,8 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 
-@Mapper
+@Mapper(uses = { SessionWebMapper.class })
+
 public interface AbsenceWebMapper {
     AbsenceWebMapper INSTANCE = Mappers.getMapper(AbsenceWebMapper.class);
 

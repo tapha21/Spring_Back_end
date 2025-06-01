@@ -20,4 +20,5 @@ public class AbsenceWebResponseDto {
     private Etat etat;
     private Type type;
     private EtudiantSimpleWebResponseDto etudiant;
+    private SessionWebResponseDto session;
 }

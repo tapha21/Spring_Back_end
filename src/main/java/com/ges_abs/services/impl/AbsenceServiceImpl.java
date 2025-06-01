@@ -106,4 +106,10 @@ public class AbsenceServiceImpl  implements AbsenceService {
 
     }
 
+    @Override
+    public List<Evenement> findAllAbsencesWithSession() {
+        return absenceRepository.findByTypeAndSessionIsNotNull(Type.ABSENCE);
+
+    }
+
 }

@@ -1,11 +1,14 @@
 package com.ges_abs.web.controllers.impl;
 import com.ges_abs.data.models.entity.Evenement;
+import com.ges_abs.data.models.entity.Session;
 import com.ges_abs.data.models.enumeration.Etat;
 import com.ges_abs.data.models.enumeration.Type;
 import com.ges_abs.services.inter.AbsenceService;
 import com.ges_abs.web.Mapper.AbsenceWebMapper;
+import com.ges_abs.web.Mapper.SessionWebMapper;
 import com.ges_abs.web.controllers.inter.AbsenceWebController;
 import com.ges_abs.web.dto.response.AbsenceWebResponseDto;
+import com.ges_abs.web.dto.response.SessionWebResponseDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -14,15 +17,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 public class AbsenceWebControllerImpl implements AbsenceWebController {
     private final AbsenceService absenceService;
-    public AbsenceWebControllerImpl(AbsenceService absenceService) {
+    private final SessionWebMapper sessionWebMapper;
+
+    public AbsenceWebControllerImpl(AbsenceService absenceService, SessionWebMapper sessionWebMapper) {
         this.absenceService = absenceService;
+        this.sessionWebMapper = sessionWebMapper;
     }
 
     @Override
@@ -174,6 +179,58 @@ public class AbsenceWebControllerImpl implements AbsenceWebController {
         ), HttpStatus.OK);
     }
 
+    @Override
+        public ResponseEntity<Map<String, Object>> getSessionsOfAbsences() {
+            List<Evenement> absences = absenceService.findAllAbsencesWithSession();
+            Set<Session> sessions = absences.stream()
+                    .map(Evenement::getSession)
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toSet());
+            List<SessionWebResponseDto> dtos = sessionWebMapper.toDtoList(new ArrayList<>(sessions));
+            return new ResponseEntity<>(Map.of(
+                    "message", "Liste des sessions associées aux absences",
+                    "data", dtos,
+                    "totalItems", dtos.size()
+            ), HttpStatus.OK);
+        }
 
+    @Override
+    public ResponseEntity<Map<String, Object>> validerAbsence(String id) {
+        Evenement absence = absenceService.findById(id);
+        if (absence == null) {
+            return new ResponseEntity<>(Map.of(
+                    "message", "Absence non trouvée",
+                    "status", "error"
+            ), HttpStatus.NOT_FOUND);
+        }
+
+        absence.setEtat(Etat.JUSTIFIE);
+        Evenement updated = absenceService.update(absence);
+        AbsenceWebResponseDto dto = AbsenceWebMapper.INSTANCE.toDto(updated);
+        return new ResponseEntity<>(Map.of(
+                "message", "Absence validée avec succès",
+                "data", dto
+        ), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<Map<String, Object>> rejeterAbsence(String id) {
+        Evenement absence = absenceService.findById(id);
+        if (absence == null) {
+            return new ResponseEntity<>(Map.of(
+                    "message", "Absence non trouvée",
+                    "status", "error"
+            ), HttpStatus.NOT_FOUND);
+        }
+        absence.setEtat(Etat.NOJUSTIFIE);
+        Evenement updated = absenceService.update(absence);
+        AbsenceWebResponseDto dto = AbsenceWebMapper.INSTANCE.toDto(updated);
+
+        return new ResponseEntity<>(Map.of(
+                "message", "Absence rejetée avec succès",
+                "data", dto
+        ), HttpStatus.OK);
+    }
 
 }
+

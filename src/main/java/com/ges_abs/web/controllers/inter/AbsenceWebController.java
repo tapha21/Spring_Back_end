@@ -37,4 +37,11 @@ public interface AbsenceWebController {
             @PathVariable String id,
             @RequestBody Map<String, String> payload
     );
+    @GetMapping("/sessions")
+    public ResponseEntity<Map<String, Object>> getSessionsOfAbsences();
+    @PutMapping("/{id}/valider")
+    ResponseEntity<Map<String, Object>> validerAbsence(@PathVariable String id);
+    @PutMapping("/{id}/rejeter")
+    ResponseEntity<Map<String, Object>> rejeterAbsence(@PathVariable String id);
+
 }
