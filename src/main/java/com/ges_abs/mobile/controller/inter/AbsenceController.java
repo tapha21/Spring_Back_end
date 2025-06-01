@@ -2,6 +2,7 @@ package com.ges_abs.mobile.controller.inter;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,6 +38,9 @@ public interface AbsenceController {
             @RequestParam String dateDebut,
             @RequestParam String dateFin
     );
-    @PostMapping("/ajouter_justificatif/{id}")
-    ResponseEntity<Map<String, Object>> addJustificatif(String id, String justification, MultipartFile file);
+    @PostMapping(value = "/evenements/{id}/justificatif", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    ResponseEntity<Map<String, Object>> addJustificatif(
+            @PathVariable String id,
+            @RequestBody Map<String, String> payload
+    );
 }

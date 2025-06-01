@@ -2,6 +2,7 @@ package com.ges_abs.web.controllers.inter;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,11 +33,7 @@ public interface AbsenceWebController {
     );
     @GetMapping("/filtre")
     ResponseEntity<Map<String, Object>> obtenirAbsencesParEtudiantEtPeriode(String etudiantId, String dateDebut, String dateFin, int page, int taille);
-    @PostMapping("/ajouter_justificatif/{id}")
-    ResponseEntity<Map<String, Object>> addJustificatif(
-            @PathVariable String id,
-            @RequestBody Map<String, String> payload
-    );
+
     @GetMapping("/sessions")
     public ResponseEntity<Map<String, Object>> getSessionsOfAbsences();
     @PutMapping("/{id}/valider")

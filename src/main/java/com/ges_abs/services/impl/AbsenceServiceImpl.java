@@ -9,10 +9,16 @@ import com.ges_abs.data.models.enumeration.Etat;
 import com.ges_abs.data.models.enumeration.Type;
 import com.ges_abs.services.inter.AbsenceService;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class AbsenceServiceImpl  implements AbsenceService {
@@ -88,17 +94,33 @@ public class AbsenceServiceImpl  implements AbsenceService {
     }
 
     @Override
-    public Evenement addJustificatif(String evenementId, String justification) {
+    public Evenement addJustificatif(String evenementId, String justification, MultipartFile file) {
         Optional<Evenement> optional = absenceRepository.findById(evenementId);
-        if (optional.isPresent()) {
-            Evenement evenement = optional.get();
-            evenement.setJustification(justification);
-            evenement.setEtat(Etat.JUSTIFIE);
-            return absenceRepository.save(evenement);
-        } else {
+        if (optional.isEmpty()) {
             throw new RuntimeException("Événement non trouvé avec l'ID : " + evenementId);
         }
+        Evenement evenement = optional.get();
+        if (justification == null || justification.trim().isEmpty()) {
+            throw new RuntimeException("La justification textuelle est requise.");
+        }
+        if (file != null && !file.isEmpty()) {
+            try {
+                String uploadDir = "uploads/justificatifs/";
+                String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+                Path filePath = Paths.get(uploadDir + fileName);
+                Files.createDirectories(filePath.getParent());
+                Files.write(filePath, file.getBytes());
+                evenement.setJustification("/" + uploadDir + fileName);
+            } catch (IOException e) {
+                throw new RuntimeException("Erreur lors de l'enregistrement du fichier justificatif.");
+            }
+        } else {
+            evenement.setJustification(justification);
+        }
+        evenement.setEtat(Etat.JUSTIFIE);
+        return absenceRepository.save(evenement);
     }
+
 
     @Override
     public Evenement update(Evenement evenement) {

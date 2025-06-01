@@ -18,9 +18,11 @@ import java.util.Map;
 public class EtudiantWebControllerImpl implements EtudiantWebController {
 
     private final EtudiantService etudiantService;
+    private final EtudiantWebMapper etudiantWebMapper;
 
-    public EtudiantWebControllerImpl(EtudiantService etudiantService) {
+    public EtudiantWebControllerImpl(EtudiantService etudiantService, EtudiantWebMapper etudiantWebMapper) {
         this.etudiantService = etudiantService;
+        this.etudiantWebMapper = etudiantWebMapper;
     }
 
     @Override
@@ -28,7 +30,7 @@ public class EtudiantWebControllerImpl implements EtudiantWebController {
         Pageable effectivePageable = PageRequest.of(page, size);
         Page<Etudiant> etudiants = etudiantService.findAll(effectivePageable);
         var data = etudiants.getContent().stream()
-                .map(EtudiantWebMapper.INSTANCE::toComplet)
+                .map(etudiantWebMapper::toComplet)
                 .toList();
         Map<String, Object> response = new HashMap<>();
         response.put("message", "Liste des absences");
@@ -45,7 +47,7 @@ public class EtudiantWebControllerImpl implements EtudiantWebController {
         Page<Etudiant> etudiants = etudiantService.findByMatricule(matricule, pageable);
         var data = etudiants.getContent()
                 .stream()
-                .map(EtudiantWebMapper.INSTANCE::toDto)
+                .map(etudiantWebMapper::toDto)
                 .toList();
         Map<String, Object> response = new HashMap<>();
         response.put("message", "Résultats de recherche pour le matricule : " + matricule);

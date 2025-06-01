@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
         ClasseWebMapper.class
 })
 public interface EtudiantWebMapper {
-    EtudiantWebMapper INSTANCE = Mappers.getMapper(EtudiantWebMapper.class);
+//    EtudiantWebMapper INSTANCE = Mappers.getMapper(EtudiantWebMapper.class);
 
     Etudiant toEntity(EtudiantWebRequestDto request);
     EtudiantSimpleWebResponseDto toDto(Etudiant etudiant);
@@ -38,3 +38,4 @@ public interface EtudiantWebMapper {
                 .collect(Collectors.toList());
     }
 }
+

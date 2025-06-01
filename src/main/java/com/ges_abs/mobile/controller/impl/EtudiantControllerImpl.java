@@ -18,29 +18,38 @@ import java.util.Map;
 @RestController
 public class EtudiantControllerImpl implements EtudiantController {
     private final EtudiantService etudiantService;
+    private final EtudiantWebMapper etudiantWebMapper;
 
-    public EtudiantControllerImpl(EtudiantService etudiantService) {
+    public EtudiantControllerImpl(EtudiantService etudiantService, EtudiantWebMapper etudiantWebMapper) {
         this.etudiantService = etudiantService;
+        this.etudiantWebMapper = etudiantWebMapper;
     }
 
     @Override
     public ResponseEntity<Map<String, Object>> getAll() {
-        List<Etudiant> etudiants = etudiantService.findAll();
-        var data = etudiants.stream()
-                .map(EtudiantWebMapper.INSTANCE::toComplet)
-                .toList();
-        Map<String, Object> response = new HashMap<>();
-        response.put("message", "Liste complète des étudiants");
-        response.put("data", data);
-
-        return ResponseEntity.ok(response);
+        try {
+            List<Etudiant> etudiants = etudiantService.findAll();
+            var data = etudiants.stream()
+                    .map(etudiantWebMapper::toComplet)
+                    .toList();
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "Liste complète des étudiants");
+            response.put("data", data);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body(Map.of(
+                    "message", "Erreur serveur",
+                    "details", e.getMessage()
+            ));
+        }
     }
 
     @Override
     public ResponseEntity<Map<String, Object>> getByMatricule(String matricule) {
         List<Etudiant> etudiants = etudiantService.findByMatricule(matricule);
         var data = etudiants.stream()
-                .map(EtudiantWebMapper.INSTANCE::toDto)
+                .map(etudiantWebMapper::toDto)
                 .toList();
         Map<String, Object> response = new HashMap<>();
         response.put("message", "Résultats de recherche pour le matricule : " + matricule);
