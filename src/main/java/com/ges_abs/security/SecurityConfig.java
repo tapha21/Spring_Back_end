@@ -31,10 +31,18 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
+                        // Autoriser Swagger UI et API docs sans authentification
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**").permitAll()
+
+                        // Autoriser login sans auth
                         .requestMatchers("/api/web/auth/login").permitAll()
-                        .requestMatchers("/api/web/**").hasRole("ADMIN")
                         .requestMatchers("/api/mobile/auth/login").permitAll()
+
+                        // Règles pour api web et mobile avec rôles
+                        .requestMatchers("/api/web/**").hasRole("ADMIN")
                         .requestMatchers("/api/mobile/**").hasAnyRole("ETUDIANT", "VIGILE")
+
+                        // Tout le reste nécessite auth
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
