@@ -32,6 +32,9 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/web/auth/login").permitAll()
+                        .requestMatchers("/api/web/**").hasRole("ADMIN")
+                        .requestMatchers("/api/mobile/auth/login").permitAll()
+                        .requestMatchers("/api/mobile/**").hasAnyRole("ETUDIANT", "VIGILE")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

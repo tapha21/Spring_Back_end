@@ -19,10 +19,6 @@ public class MyUserDetailsService implements UserDetailsService {
         User utilisateur = userRepository.findByLogin(login)
                 .orElseThrow(() -> new UsernameNotFoundException("Utilisateur non trouvé avec le login : " + login));
 
-        Role role = utilisateur.getRole();
-        if (role == null || !"ADMIN".equalsIgnoreCase(role.name())) {
-            throw new UsernameNotFoundException("Accès refusé : seul un administrateur peut se connecter");
-        }
         //User Spring Security
         return new org.springframework.security.core.userdetails.User(
                 utilisateur.getLogin(),
