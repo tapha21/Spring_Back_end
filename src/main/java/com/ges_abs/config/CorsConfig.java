@@ -13,7 +13,6 @@ public class CorsConfig implements WebMvcConfigurer {
                         "https://angular-hackaton.vercel.app",
                         "https://angular-hackaton-lkingtxq6-victorin-attolodes-projects.vercel.app"
                 )
-//                .allowedOrigins("*")
                 .allowedMethods("GET", "POST", "PUT", "DELETE")
                 .allowedHeaders("*")
                 .allowCredentials(true);
