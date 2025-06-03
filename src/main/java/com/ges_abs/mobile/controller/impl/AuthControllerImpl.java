@@ -53,8 +53,8 @@ public class AuthControllerImpl implements AuthController {
         }
 
         User user = utilisateurOpt.get();
-        if (user.getRole() != Role.ADMIN) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Seuls les administrateurs peuvent se connecter au site web.");
+        if (user.getRole() == Role.ADMIN) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Les administrateurs ne peuvent pas se connecter via l'application mobile.");
         }
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(loginRequest.getLogin());
