@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
-
 @RestController
 public class AuthControllerImpl implements AuthController {
     @Autowired
@@ -38,18 +37,25 @@ public class AuthControllerImpl implements AuthController {
     public ResponseEntity<?> login(@RequestBody LoginWebRequestDto loginRequest) {
         try {
             authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginRequest.getLogin(), loginRequest.getPassword())
+                    new UsernamePasswordAuthenticationToken(
+                            loginRequest.getLogin(),
+                            loginRequest.getPassword()
+                    )
             );
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Identifiants invalides");
         }
 
-        Optional<User> utilisateuropt = userRepository.findByLogin(loginRequest.getLogin());
-        if (utilisateuropt.isEmpty()) {
+        Optional<User> utilisateurOpt = userRepository.findByLogin(loginRequest.getLogin());
+        if (utilisateurOpt.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Utilisateur introuvable");
         }
 
-        User user = utilisateuropt.get();
+        User user = utilisateurOpt.get();
+
+        UserDetails userDetails = userDetailsService.loadUserByUsername(loginRequest.getLogin());
+        String jwt = jwtUtil.generateToken(userDetails);  // ✅ Avec roles
+
         UserWithoutPasswordDto userDto = new UserWithoutPasswordDto(
                 user.getId(),
                 user.getLogin(),
@@ -57,9 +63,6 @@ public class AuthControllerImpl implements AuthController {
                 user.getPrenom(),
                 user.getRole()
         );
-
-        UserDetails userDetails = userDetailsService.loadUserByUsername(loginRequest.getLogin());
-        String jwt = jwtUtil.generateToken(userDetails.getUsername());
 
         AuthWebResponseDto response = new AuthWebResponseDto(jwt, userDto);
         return ResponseEntity.ok(response);

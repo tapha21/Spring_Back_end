@@ -3,15 +3,14 @@ package com.ges_abs.security;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.security.Key;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Component
 public class JWTUtil {
@@ -24,6 +23,11 @@ public class JWTUtil {
 
     public String extractLogin(String token) {
         return extractClaim(token, Claims::getSubject);
+    }
+
+    public List<String> extractAuthorities(String token) {
+        Claims claims = extractAllClaims(token);
+        return claims.get("authorities", List.class);
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
@@ -39,10 +43,15 @@ public class JWTUtil {
                 .parseClaimsJws(token)
                 .getBody();
     }
-
-    public String generateToken(String login) {
+    public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
-        return createToken(claims, login);
+        List<String> authorities = userDetails.getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority) // exemple: "ROLE_ADMIN"
+                .collect(Collectors.toList());
+        claims.put("authorities", authorities);
+
+        return createToken(claims, userDetails.getUsername());
     }
 
     private String createToken(Map<String, Object> claims, String subject) {

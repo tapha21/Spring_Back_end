@@ -2,6 +2,7 @@ package com.ges_abs.web.controllers.impl;
 
 import com.ges_abs.data.models.entity.User;
 import com.ges_abs.data.repository.UserRepository;
+import org.springframework.security.core.userdetails.UserDetails;
 import com.ges_abs.security.JWTUtil;
 import com.ges_abs.security.MyUserDetailsService;
 import com.ges_abs.web.controllers.inter.AuthWebController;
@@ -40,8 +41,9 @@ public class AuthWebControllerImpl implements AuthWebController {
                             loginRequest.getPassword()
                     )
             );
+            UserDetails userDetails = userDetailsService.loadUserByUsername(loginRequest.getLogin());
 
-            final String jwt = jwtUtil.generateToken(loginRequest.getLogin());
+            final String jwt = jwtUtil.generateToken(userDetails);
 
             Optional<User> utilisateuropt = userRepository.findByLogin(loginRequest.getLogin());
             if (utilisateuropt.isEmpty()) {
