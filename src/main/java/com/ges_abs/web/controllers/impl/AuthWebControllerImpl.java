@@ -1,6 +1,7 @@
 package com.ges_abs.web.controllers.impl;
 
 import com.ges_abs.data.models.entity.User;
+import com.ges_abs.data.models.enumeration.Role;
 import com.ges_abs.data.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import com.ges_abs.security.JWTUtil;
@@ -51,6 +52,9 @@ public class AuthWebControllerImpl implements AuthWebController {
             }
 
             User user = utilisateuropt.get();
+            if (user.getRole() != Role.ADMIN) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Seuls les administrateurs peuvent se connecter au site web.");
+            }
             UserWithoutPasswordDto userDto = new UserWithoutPasswordDto(
                     user.getId(),
                     user.getLogin(),

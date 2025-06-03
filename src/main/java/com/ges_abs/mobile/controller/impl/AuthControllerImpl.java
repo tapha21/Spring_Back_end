@@ -1,6 +1,7 @@
 package com.ges_abs.mobile.controller.impl;
 
 import com.ges_abs.data.models.entity.User;
+import com.ges_abs.data.models.enumeration.Role;
 import com.ges_abs.data.repository.UserRepository;
 import com.ges_abs.mobile.controller.inter.AuthController;
 import com.ges_abs.security.JWTUtil;
@@ -52,9 +53,12 @@ public class AuthControllerImpl implements AuthController {
         }
 
         User user = utilisateurOpt.get();
+        if (user.getRole() != Role.ADMIN) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Seuls les administrateurs peuvent se connecter au site web.");
+        }
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(loginRequest.getLogin());
-        String jwt = jwtUtil.generateToken(userDetails);  // ✅ Avec roles
+        String jwt = jwtUtil.generateToken(userDetails);
 
         UserWithoutPasswordDto userDto = new UserWithoutPasswordDto(
                 user.getId(),
