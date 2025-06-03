@@ -18,10 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
-import java.util.Base64;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 public class AbsenceControllerImpl implements AbsenceController {
@@ -136,7 +133,16 @@ public class AbsenceControllerImpl implements AbsenceController {
         }
         try {
             String base64Image = Base64.getEncoder().encodeToString(file.getBytes());
-            absence.setJustificatifImage(base64Image);
+
+            // Récupérer la liste actuelle ou en créer une nouvelle
+            List<String> justificatifs = absence.getJustificatifImage();
+            if (justificatifs == null) {
+                justificatifs = new ArrayList<>();
+            }
+            // Ajouter la nouvelle image
+            justificatifs.add(base64Image);
+            absence.setJustificatifImage(justificatifs);
+
             absence.setEtat(Etat.JUSTIFIE);
             Evenement updated = absenceService.update(absence);
             AbsenceWebResponseDto dto = AbsenceWebMapper.INSTANCE.toDto(updated);
@@ -154,7 +160,8 @@ public class AbsenceControllerImpl implements AbsenceController {
 
 
 
-    }
+
+}
 
 
 

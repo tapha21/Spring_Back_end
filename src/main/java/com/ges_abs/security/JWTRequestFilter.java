@@ -26,6 +26,11 @@ public class JWTRequestFilter extends OncePerRequestFilter {
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
+        String requestPath = request.getServletPath();
+        if (requestPath.startsWith("/api/web/auth/login")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
         final String authHeader = request.getHeader("Authorization");
 
         String login = null;
