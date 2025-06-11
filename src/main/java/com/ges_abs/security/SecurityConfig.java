@@ -1,4 +1,6 @@
 package com.ges_abs.security;
+
+import com.ges_abs.config.CorsConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +15,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfigurationSource;
+
+import static org.springframework.aot.generate.ValueCodeGenerator.withDefaults;
 
 @Configuration
 @EnableWebSecurity
@@ -27,28 +32,25 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, CorsConfigurationSource corsConfigurationSource) throws Exception {
         return http
+                .cors(cors -> cors.configurationSource(corsConfigurationSource))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        // Autoriser Swagger UI et API docs sans authentification
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**").permitAll()
-
-                        // Autoriser login sans auth
                         .requestMatchers("/api/web/auth/login").permitAll()
                         .requestMatchers("/api/mobile/auth/login").permitAll()
-
-                        // Règles pour api web et mobile avec rôles
                         .requestMatchers("/api/web/**").hasRole("ADMIN")
-                        .requestMatchers("/api/mobile/**").hasAnyRole("ETUDIANT", "VIGILE")
-
-                        // Tout le reste nécessite auth
+                        //.requestMatchers("/api/mobile/**").hasAnyRole("ETUDIANT", "VIGILE")
+                        .requestMatchers("/api/mobile/**").permitAll()     
+                        .requestMatchers("/api/**").permitAll()     
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

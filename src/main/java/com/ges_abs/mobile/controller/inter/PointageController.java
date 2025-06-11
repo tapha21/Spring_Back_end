@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 import java.util.Optional;
 
-@RequestMapping("/api/pointages")
+@RequestMapping("/api/mobile/pointages")
 public interface PointageController {
 
     @GetMapping("")
