@@ -4,6 +4,7 @@ package com.ges_abs.data.models.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ges_abs.data.models.enumeration.Filiere;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import lombok.AllArgsConstructor;
@@ -18,7 +19,7 @@ import lombok.NoArgsConstructor;
 @Document(collection = "classe")
 public class Classe extends AbstractEntity{
     private String niveau;
-    private String filiere;
+    private Filiere filiere;
     @DBRef
     private List<Inscription> inscription = new ArrayList<>();
     @DBRef
