@@ -44,6 +44,8 @@ public class SecurityConfig {
                         //.requestMatchers("/api/mobile/**").hasAnyRole("ETUDIANT", "VIGILE")
                         .requestMatchers("/api/mobile/**").permitAll()     
                         .requestMatchers("/api/**").permitAll()     
+                        .requestMatchers("/api/mobile/**").hasAnyRole("ETUDIANT", "VIGILE")
+
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
