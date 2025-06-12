@@ -1,7 +1,9 @@
 package com.ges_abs.mobile.controller.impl;
 
+import com.ges_abs.data.models.entity.Etudiant;
 import com.ges_abs.data.models.entity.User;
 import com.ges_abs.data.models.enumeration.Role;
+import com.ges_abs.data.repository.EtudiantRepository;
 import com.ges_abs.data.repository.UserRepository;
 import com.ges_abs.mobile.controller.inter.AuthController;
 import com.ges_abs.security.JWTUtil;
@@ -21,6 +23,7 @@ import java.util.Optional;
 
 @RestController
 public class AuthControllerImpl implements AuthController {
+
     @Autowired
     private AuthenticationManager authenticationManager;
 
@@ -32,6 +35,9 @@ public class AuthControllerImpl implements AuthController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private EtudiantRepository etudiantRepository;
 
     @PostMapping("/login")
     @Override
@@ -58,16 +64,21 @@ public class AuthControllerImpl implements AuthController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Les administrateurs ne peuvent pas se connecter via l'application mobile.");
         }
 
+        Optional<Etudiant> etudiantOpt = etudiantRepository.findByUser(user);
+        String matricule = etudiantOpt.map(Etudiant::getMatricule).orElse(null);
+
         UserDetails userDetails = userDetailsService.loadUserByUsername(loginRequest.getLogin());
         String jwt = jwtUtil.generateToken(userDetails);
 
-        UserWithoutPasswordDto userDto = new UserWithoutPasswordDto(
-                user.getId(),
-                user.getLogin(),
-                user.getNom(),
-                user.getPrenom(),
-                user.getRole()
-        );
+        UserWithoutPasswordDto userDto = UserWithoutPasswordDto.builder()
+                .id(user.getId())
+                .login(user.getLogin())
+                .nom(user.getNom())
+                .prenom(user.getPrenom())
+                .role(user.getRole())
+                .telephone(user.getTelephone())
+                .matricule(matricule)
+                .build();
 
         AuthWebResponseDto response = new AuthWebResponseDto(jwt, userDto);
         return ResponseEntity.ok(response);

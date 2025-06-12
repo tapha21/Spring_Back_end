@@ -16,8 +16,8 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 
-@Order(2)
-@Component
+//@Order(2)
+//@Component
 public class EtudiantCoursMock implements CommandLineRunner {
 
     private final EtudiantCoursRepository etudiantCoursRepository;
@@ -35,27 +35,24 @@ public class EtudiantCoursMock implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         if (etudiantCoursRepository.count() == 0) {
-            var user1 = userRepository.findByLogin("etudiant1");
-            var user2 = userRepository.findByLogin("etudiant2");
-            var etudiant1 = etudiantRepository.findByUser(user1).orElse(null);
-            var etudiant2 = etudiantRepository.findByUser(user2).orElse(null);
-            Cours coursAlgo = coursRepository.findByLibelle("Algorithmique").orElse(null);
-            Cours coursAnalyse = coursRepository.findByLibelle("Angular").orElse(null);
+            userRepository.findByLogin("etudiant1").ifPresent(user1 -> {
+                etudiantRepository.findByUser(user1).ifPresent(etudiant1 -> {
+                    coursRepository.findByLibelle("Algorithmique").ifPresent(coursAlgo -> {
+                        etudiantCoursRepository.save(new EtudiantCours(etudiant1, coursAlgo));
+                    });
+                    coursRepository.findByLibelle("Angular").ifPresent(coursAngular -> {
+                        etudiantCoursRepository.save(new EtudiantCours(etudiant1, coursAngular));
+                    });
+                });
+            });
 
-            if (etudiant1 != null && coursAlgo != null) {
-                EtudiantCours ec1 = new EtudiantCours(etudiant1, coursAlgo);
-                etudiantCoursRepository.save(ec1);
-            }
-
-            if (etudiant2 != null && coursAnalyse != null) {
-                EtudiantCours ec2 = new EtudiantCours(etudiant2, coursAnalyse);
-                etudiantCoursRepository.save(ec2);
-            }
-
-            if (etudiant1 != null && coursAnalyse != null) {
-                EtudiantCours ec3 = new EtudiantCours(etudiant1, coursAnalyse);
-                etudiantCoursRepository.save(ec3);
-            }
+            userRepository.findByLogin("etudiant2").ifPresent(user2 -> {
+                etudiantRepository.findByUser(user2).ifPresent(etudiant2 -> {
+                    coursRepository.findByLibelle("Angular").ifPresent(coursAngular -> {
+                        etudiantCoursRepository.save(new EtudiantCours(etudiant2, coursAngular));
+                    });
+                });
+            });
 
             log.info("Mocks d'EtudiantCours créés.");
         }
