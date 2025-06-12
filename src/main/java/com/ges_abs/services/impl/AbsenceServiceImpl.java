@@ -128,9 +128,16 @@ public class AbsenceServiceImpl  implements AbsenceService {
 
     @Override
     public Page<Evenement> findByEtatAndType(Etat etat, Type type, Pageable pageable) {
-        return absenceRepository.findByEtatAndType(etat, type, pageable);
-
-    }
+            if (etat != null && type != null) {
+                return absenceRepository.findByEtatAndType(etat, type, pageable);
+            } else if (etat != null) {
+                return absenceRepository.findByEtat(etat, pageable);
+            } else if (type != null) {
+                return absenceRepository.findByType(type, pageable);
+            } else {
+                return absenceRepository.findAll(pageable);
+            }
+}
 
 
 }

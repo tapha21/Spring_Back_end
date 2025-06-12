@@ -248,6 +248,7 @@ public class AbsenceWebControllerImpl implements AbsenceWebController {
         response.put("totalPages", absences.getTotalPages());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+    
 
 
 }
