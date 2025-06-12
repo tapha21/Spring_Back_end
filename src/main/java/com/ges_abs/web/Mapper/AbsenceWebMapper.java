@@ -12,7 +12,7 @@ import org.mapstruct.factory.Mappers;
 
 public interface AbsenceWebMapper {
     AbsenceWebMapper INSTANCE = Mappers.getMapper(AbsenceWebMapper.class);
-//    @Mapping(source = "justificatifImage", target = "justificatifImage")
+   @Mapping(source = "justificatifImage", target = "justificatifImage")
 @Mapping(source = "session", target = "session")
 AbsenceWebResponseDto toDto(Evenement absence);
     Evenement ToEntity(AbsenceWebRequestDto userDto);
