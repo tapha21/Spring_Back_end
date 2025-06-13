@@ -1,30 +1,23 @@
 package com.ges_abs.config.Firebase;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import io.jsonwebtoken.io.IOException;
-import org.springframework.http.HttpStatus;
+import java.io.IOException;
+import java.util.UUID;
+import com.google.cloud.storage.Blob;
+import com.google.cloud.storage.Acl;
+import com.google.cloud.storage.Bucket;
+import com.google.cloud.storage.Storage;
+import com.google.cloud.storage.StorageOptions;
 
-@RestController
-@RequestMapping("/api/images")
-public class ImageController {
+@Service
+public class FirebaseImageService {
 
-    private final FirebaseImageService imageService;
-
-    public ImageController(FirebaseImageService imageService) {
-        this.imageService = imageService;
-    }
-
-    @PostMapping("/upload")
-    public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) throws java.io.IOException {
-        try {
-            String imageUrl = imageService.uploadFile(file);
-            return ResponseEntity.ok(imageUrl);
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Upload failed");
-        }
+    public String uploadFile(MultipartFile file) throws IOException {
+        String fileName = UUID.randomUUID().toString() + "-" + file.getOriginalFilename();
+        Storage storage = StorageOptions.getDefaultInstance().getService();
+        Bucket bucket = storage.get("pointage-d36f1.appspot.com");
+        Blob blob = bucket.create(fileName, file.getInputStream(), file.getContentType());
+        blob.createAcl(Acl.of(Acl.User.ofAllUsers(), Acl.Role.READER));
+        return String.format("https://storage.googleapis.com/%s/%s", bucket.getName(), fileName);
     }
 }
