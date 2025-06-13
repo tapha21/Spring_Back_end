@@ -1,5 +1,6 @@
 package com.ges_abs.config.Firebase;
 
+import com.google.cloud.storage.Bucket;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
@@ -22,7 +23,19 @@ public class FirebaseImageService {
     @PostConstruct
     public void init() {
         storage = StorageOptions.getDefaultInstance().getService();
-        if (storage.get(bucketName) == null) {
+
+        // DEBUG: Affiche la variable d'environnement utilisée
+        System.out.println("GOOGLE_APPLICATION_CREDENTIALS=" + System.getenv("GOOGLE_APPLICATION_CREDENTIALS"));
+
+        // DEBUG: Liste les buckets accessibles par le service account
+        System.out.println("--- Buckets accessibles ---");
+        for (Bucket b : storage.list().iterateAll()) {
+            System.out.println(b.getName());
+        }
+
+        // DEBUG: Tente de récupérer le bucket demandé
+        Bucket bucket = storage.get(bucketName);
+        if (bucket == null) {
             throw new IllegalStateException("Le bucket '" + bucketName + "' est introuvable ou inaccessible.");
         }
     }
