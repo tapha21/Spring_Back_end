@@ -64,8 +64,18 @@ public class AuthControllerImpl implements AuthController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Les administrateurs ne peuvent pas se connecter via l'application mobile.");
         }
 
-        Optional<Etudiant> etudiantOpt = etudiantRepository.findByUser(user);
-        String matricule = etudiantOpt.map(Etudiant::getMatricule).orElse(null);
+        // Récupération du matricule si l'utilisateur est un étudiant
+        String matricule = null;
+        if (user.getRole() == Role.ETUDIANT) {
+            Optional<Etudiant> etudiantOpt = etudiantRepository.findByUser(user);
+            if (etudiantOpt.isPresent()) {
+                matricule = etudiantOpt.get().getMatricule();
+            } else {
+                // Gestion explicite si aucun étudiant n'est trouvé
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body("Aucun étudiant associé à cet utilisateur.");
+            }
+        }
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(loginRequest.getLogin());
         String jwt = jwtUtil.generateToken(userDetails);

@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDate;
 import java.util.*;
@@ -230,23 +231,46 @@ public class AbsenceWebControllerImpl implements AbsenceWebController {
     }
 
     @Override
-    public ResponseEntity<Map<String, Object>> getByEtatAndType(String etat, String type, int page, int size) {
-        Etat etatEnum = Etat.valueOf(etat.toUpperCase());
-        Type typeEnum = Type.valueOf(type.toUpperCase());
-        Pageable pageable = PageRequest.of(page, size);
+    public ResponseEntity<Map<String, Object>> getByEtatAndType(
+            @RequestParam(required = false) String etat,
+            @RequestParam(required = false) String type,
+            @RequestParam int page,
+            @RequestParam int size
+    ) {
+        Etat etatEnum = null;
+        Type typeEnum = null;
 
+        if (etat != null && !etat.isEmpty()) {
+            try {
+                etatEnum = Etat.valueOf(etat.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                return ResponseEntity.badRequest().body(Map.of("message", "État invalide: " + etat));
+            }
+        }
+
+        if (type != null && !type.isEmpty()) {
+            try {
+                typeEnum = Type.valueOf(type.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                return ResponseEntity.badRequest().body(Map.of("message", "Type invalide: " + type));
+            }
+        }
+
+        Pageable pageable = PageRequest.of(page, size);
         Page<Evenement> absences = absenceService.findByEtatAndType(etatEnum, typeEnum, pageable);
+
         List<AbsenceWebResponseDto> data = absences.getContent().stream()
                 .map(AbsenceWebMapper.INSTANCE::toDto)
                 .toList();
 
         Map<String, Object> response = new HashMap<>();
-        response.put("message", "Absences avec l'état " + etatEnum + " et le type " + typeEnum);
+        response.put("message", "Résultat du filtre");
         response.put("data", data);
         response.put("currentPage", absences.getNumber());
         response.put("totalItems", absences.getTotalElements());
         response.put("totalPages", absences.getTotalPages());
-        return new ResponseEntity<>(response, HttpStatus.OK);
+
+        return ResponseEntity.ok(response);
     }
     
 
