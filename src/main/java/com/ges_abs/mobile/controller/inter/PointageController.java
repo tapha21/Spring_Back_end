@@ -24,8 +24,8 @@ public interface PointageController {
     @PostMapping("/create")
     ResponseEntity<Pointage> createPointage(@RequestParam("etudiantId") String etudiantId,
                                             @RequestParam("vigileId") String vigileId);
-    @PutMapping("/{id}")
-ResponseEntity<Pointage> updatePointage(String id, PointageRequestDto dto);
+//    @PutMapping("/{id}")
+//ResponseEntity<Pointage> updatePointage(String id, PointageRequestDto dto);
     @DeleteMapping("/{id}")
     ResponseEntity<Void> deletePointage(@PathVariable String id);
 

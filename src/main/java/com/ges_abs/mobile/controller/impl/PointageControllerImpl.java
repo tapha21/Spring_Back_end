@@ -67,33 +67,33 @@ public class PointageControllerImpl implements PointageController {
 
 
 
-    @Override
-    public ResponseEntity<Pointage> updatePointage(String id, PointageRequestDto dto) {
-        Optional<Pointage> existingPointageOpt = pointageService.getPointageById(id);
-        if (existingPointageOpt.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-
-        try {
-            Pointage existingPointage = existingPointageOpt.get();
-            existingPointage.setDate(dto.getDate());
-            existingPointage.setHeure(dto.getHeure());
-
-            existingPointage.setVigile(vigileRepository.findById(dto.getVigileId())
-                    .orElseThrow(() -> new RuntimeException("Vigile introuvable")));
-
-            existingPointage.setEtudiant(etudiantRepository.findById(dto.getEtudiantId())
-                    .orElseThrow(() -> new RuntimeException("Étudiant introuvable")));
-
-            existingPointage.setSession(sessionRepository.findById(dto.getSessionId())
-                    .orElseThrow(() -> new RuntimeException("Session introuvable")));
-
-            Pointage updated = pointageService.createPointage(existingPointage);
-            return ResponseEntity.ok(updated);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-    }
+//    @Override
+//    public ResponseEntity<Pointage> updatePointage(String id, PointageRequestDto dto) {
+//        Optional<Pointage> existingPointageOpt = pointageService.getPointageById(id);
+//        if (existingPointageOpt.isEmpty()) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+//        }
+//
+//        try {
+//            Pointage existingPointage = existingPointageOpt.get();
+//            existingPointage.setDate(dto.getDate());
+//            existingPointage.setHeure(dto.getHeure());
+//
+//            existingPointage.setVigile(vigileRepository.findById(dto.getVigileId())
+//                    .orElseThrow(() -> new RuntimeException("Vigile introuvable")));
+//
+//            existingPointage.setEtudiant(etudiantRepository.findById(dto.getEtudiantId())
+//                    .orElseThrow(() -> new RuntimeException("Étudiant introuvable")));
+//
+//            existingPointage.setSession(sessionRepository.findById(dto.getSessionId())
+//                    .orElseThrow(() -> new RuntimeException("Session introuvable")));
+//
+//            Pointage updated = pointageService.createPointage(existingPointage);
+//            return ResponseEntity.ok(updated);
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+//        }
+//    }
 
     @Override
     public ResponseEntity<Void> deletePointage(String id) {
