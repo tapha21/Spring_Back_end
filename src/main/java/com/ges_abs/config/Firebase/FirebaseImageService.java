@@ -1,23 +1,43 @@
 package com.ges_abs.config.Firebase;
-import org.springframework.stereotype.Service;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import java.io.IOException;
-import java.util.UUID;
-import com.google.cloud.storage.Blob;
-import com.google.cloud.storage.Acl;
-import com.google.cloud.storage.Bucket;
-import com.google.cloud.storage.Storage;
-import com.google.cloud.storage.StorageOptions;
 
-@Service
-public class FirebaseImageService {
+@RestController
+@RequestMapping("/api/images")
+public class ImageController {
 
-    public String uploadFile(MultipartFile file) throws IOException {
-        String fileName = UUID.randomUUID().toString() + "-" + file.getOriginalFilename();
-        Storage storage = StorageOptions.getDefaultInstance().getService();
-        Bucket bucket = storage.get("pointage-d36f1.appspot.com");
-        Blob blob = bucket.create(fileName, file.getInputStream(), file.getContentType());
-        blob.createAcl(Acl.of(Acl.User.ofAllUsers(), Acl.Role.READER));
-        return String.format("https://storage.googleapis.com/%s/%s", bucket.getName(), fileName);
+    private final FirebaseImageService imageService;
+
+    public ImageController(FirebaseImageService imageService) {
+        this.imageService = imageService;
+    }
+
+    @Operation(
+        summary = "Uploader une image",
+        requestBody = @RequestBody(
+            content = @Content(
+                mediaType = MediaType.MULTIPART_FORM_DATA_VALUE,
+                schema = @Schema(type = "object", properties = {
+                    @Schema.Property(name = "file", schema = @Schema(type = "string", format = "binary"))
+                })
+            )
+        )
+    )
+    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) {
+        try {
+            String imageUrl = imageService.uploadFile(file);
+            return ResponseEntity.ok(imageUrl);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Upload failed: " + e.getMessage());
+        }
     }
 }
