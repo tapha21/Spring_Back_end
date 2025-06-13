@@ -14,6 +14,9 @@ public class SessionWebResponseDto {
     private LocalDate date;
     private LocalTime heureDebut;
     private LocalTime heureFin;
+    private String salle;  
+    private String batiment;
     private CoursWebResponseDto cours;
+    
 
 }

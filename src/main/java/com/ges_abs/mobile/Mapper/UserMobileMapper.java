@@ -7,7 +7,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
 @Mapper
-public interface UserMobileMapper {
+public interface  UserMobileMapper {
     UserMobileMapper INSTANCE = Mappers.getMapper(UserMobileMapper.class);
     UserResponseDto toDto(User user);
     User toEntity(UserResponseDto userDto);

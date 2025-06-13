@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -61,29 +62,90 @@ public class PointageServiceImpl implements PointageService {
     }
 
     @Override
-    public void enregistrerPointage(String etudiantId, String vigileId) {
+    public Pointage enregistrerPointage(String etudiantId, String vigileId) {
         Etudiant etudiant = etudiantRepository.findById(etudiantId)
-                .orElseThrow(() -> new RuntimeException("Étudiant introuvable"));
+                .orElseThrow(() -> new RuntimeException("Étudiant introuvable avec l'ID : " + etudiantId));
+        System.out.println("Étudiant trouvé : " + etudiant.getUser().getPrenom());
 
         Vigile vigile = vigileRepository.findById(vigileId)
-                .orElseThrow(() -> new RuntimeException("Vigile introuvable"));
+                .orElseThrow(() -> new RuntimeException("Vigile introuvable avec l'ID : " + vigileId));
+        System.out.println("Vigile trouvé : " + vigile.getUser().getPrenom());
 
         List<Session> sessionsDuJour = getCoursDuJour(etudiant);
 
-        Session session = getSessionEnCours(sessionsDuJour)
-                .orElseThrow(() -> new RuntimeException("Aucune session en cours trouvée pour l'étudiant"));
+        if (sessionsDuJour.isEmpty()) {
+            System.out.println("Aucune session trouvée pour aujourd'hui.");
+        } else {
+            for (Session s : sessionsDuJour) {
+                System.out.println("- Session de " + s.getHeureDebut() + " à " + s.getHeureFin());
+            }
+        }
+        System.out.println("===========================================");
 
-        Pointage pointage = new Pointage(LocalDate.now(), LocalTime.now(), vigile, etudiant, session);
-        pointageRepository.save(pointage);
+        Session session = getSessionEnCours(sessionsDuJour)
+                .orElseThrow(() -> new RuntimeException("Aucune session en cours trouvée pour cet étudiant"));
+
+        System.out.println("🟢 Session en cours : " + session);
+
+
+        //  Création du pointage
+        Pointage pointage = new Pointage();
+        pointage.setDate(LocalDate.now());
+        pointage.setHeure(LocalTime.now());
+        pointage.setEtudiant(etudiant);
+        pointage.setVigile(vigile);
+        pointage.setSession(session);
+
+        //Lien pointage-etudiant
+        if (etudiant.getPointageList() == null) {
+            etudiant.setPointageList(new ArrayList<>());
+        }
+        
+        etudiant.getPointageList().add(pointage);
+         if (vigile.getPointageList() == null) {
+            vigile.setPointageList(new ArrayList<>());
+        }
+        
+        vigile.getPointageList().add(pointage);
+        //Lien pointage-session
+        if (session.getPointages() == null) {
+            session.setPointages(new ArrayList<>());
+        }
+        session.getPointages().add(pointage);
+
+        //  Enregistrements
+        Pointage savedPointage = pointageRepository.save(pointage);
+
+        etudiantRepository.save(etudiant);
+        vigileRepository.save(vigile);
+        sessionRepository.save(session);
+
+        System.out.println(" Pointage sauvegardé : " + savedPointage);
+        //  Traitement automatique des événements après pointage
+        traiterEvenementsSession(session);
+
+        List<Pointage> pointagesDeSession = pointageRepository.findBySession_Id(session.getId());
+        System.out.println(" Pointages réellement en base pour cette session :");
+        pointagesDeSession.forEach(System.out::println);
+
+
+        return savedPointage;
     }
+
+
 
     @Override
     public void traiterEvenementsSession(Session session) {
         List<EtudiantCours> etudiants = etudiantCoursRepository.findByCours(session.getCours());
-
+        System.out.println(etudiants);
         for (EtudiantCours ec : etudiants) {
             Etudiant etudiant = ec.getEtudiant();
-            Optional<Pointage> pointageOpt = pointageRepository.findByEtudiantAndSession(etudiant, session);
+            System.out.println(etudiant);
+            System.out.println(session);
+            System.out.println("🔍 Recherche du pointage de l'étudiant " + etudiant.getId() + " pour la session " + session.getId());
+            Optional<Pointage> pointageOpt = pointageRepository.findByEtudiant_IdAndSession_Id(
+                    etudiant.getId(), session.getId());
+            System.out.println(pointageOpt);
 
             if (pointageOpt.isEmpty()) {
                 // ABSENCE
@@ -99,9 +161,13 @@ public class PointageServiceImpl implements PointageService {
                         session
                 );
                 evenementRepository.save(absence);
+                session.getEvenements().add(absence);
+                sessionRepository.save(session);
             } else {
                 Pointage pointage = pointageOpt.get();
+                System.out.println(pointage);
                 LocalTime heurePointage = pointage.getHeure();
+                LocalTime seuilRetard = session.getHeureDebut().plusMinutes(10);
                 if (heurePointage.isAfter(session.getHeureDebut()) && heurePointage.isBefore(session.getHeureFin())) {
                     // RETARD
                     Evenement retard = new Evenement(
@@ -110,12 +176,14 @@ public class PointageServiceImpl implements PointageService {
                             heurePointage,
                             null,
                             null,
-                            Etat.ENATTENTE,
+                            Etat.NOJUSTIFIE,
                             Type.RETARD,
                             etudiant,
                             session
                     );
                     evenementRepository.save(retard);
+                    session.getEvenements().add(retard);
+                    sessionRepository.save(session);
                 }
             }
         }
@@ -124,10 +192,14 @@ public class PointageServiceImpl implements PointageService {
     @Override
     public List<Session> getCoursDuJour(Etudiant etudiant) {
         LocalDate today = LocalDate.now();
+        List<Cours> coursList=new ArrayList<>();
         List<EtudiantCours> etudiantCoursList = etudiantCoursRepository.findByEtudiant(etudiant);
-        List<Cours> coursList = etudiantCoursList.stream()
-                .map(EtudiantCours::getCours)
-                .collect(Collectors.toList());
+        System.out.println(etudiantCoursList);
+        for (EtudiantCours et : etudiantCoursList) {
+            Cours cours = et.getCours();
+            System.out.println(cours);
+            coursList.add(cours);
+        }
 
         return sessionRepository.findByCoursInAndDate(coursList, today);
     }

@@ -19,7 +19,7 @@ public interface PointageService {
 
     Pointage createPointage(Pointage pointage);
 
-    void enregistrerPointage(String etudiantId, String vigileId);
+    Pointage enregistrerPointage(String etudiantId, String vigileId);
     void traiterEvenementsSession(Session session);
     List<Session> getCoursDuJour(Etudiant etudiant);
 

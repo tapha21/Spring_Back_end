@@ -36,4 +36,17 @@ public class Etudiant extends AbstractEntity {
     private List<EtudiantCours> etudiantCoursList = new ArrayList<>();
     @DBRef
     private List<Pointage> pointageList = new ArrayList<>();
+    @Override
+    public String toString() {
+        return "Etudiant{" +
+                "id='" + getId() + '\'' +
+                ", nom='" + (user != null ? user.getNom() : "") + '\'' +
+                ", prenom='" + (user != null ? user.getPrenom() : "") + '\'' +
+                ", matricule='" + matricule + '\'' +
+                ", niveau=" + niveau +
+                ", filiere=" + filiere +
+                ", classe=" + (classe != null ? classe.getNiveau() + "-" + classe.getFiliere() : "null") +
+                '}';
+    }
+
 }

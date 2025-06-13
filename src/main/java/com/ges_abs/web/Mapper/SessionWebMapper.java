@@ -13,9 +13,19 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface SessionWebMapper {
     SessionWebMapper INSTANCE = Mappers.getMapper(SessionWebMapper.class);
-    SessionWebResponseDto toDto(Session session);
 
+    @Mapping(target = "salle", expression = "java(formatSalle(session))")
+    @Mapping(target = "batiment", expression = "java(session.getBatiment().getNom())")
+    SessionWebResponseDto toDto(Session session);
     List<SessionWebResponseDto> toDtoList(List<Session> sessions);
+
+    default String formatSalle(Session session) {
+        if (session.getSalle() != null) {
+            return "Salle " + session.getSalle().getNumero();
+        }
+        return null;
+    }
 }
+
 
 

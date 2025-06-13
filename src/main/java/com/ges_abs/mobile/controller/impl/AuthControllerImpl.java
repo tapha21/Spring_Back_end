@@ -1,8 +1,12 @@
 package com.ges_abs.mobile.controller.impl;
 
+import com.ges_abs.data.models.entity.Etudiant;
 import com.ges_abs.data.models.entity.User;
+import com.ges_abs.data.models.entity.Vigile;
 import com.ges_abs.data.models.enumeration.Role;
+import com.ges_abs.data.repository.EtudiantRepository;
 import com.ges_abs.data.repository.UserRepository;
+import com.ges_abs.data.repository.VigileRepository;
 import com.ges_abs.mobile.controller.inter.AuthController;
 import com.ges_abs.security.JWTUtil;
 import com.ges_abs.security.MyUserDetailsService;
@@ -21,6 +25,7 @@ import java.util.Optional;
 
 @RestController
 public class AuthControllerImpl implements AuthController {
+
     @Autowired
     private AuthenticationManager authenticationManager;
 
@@ -32,6 +37,12 @@ public class AuthControllerImpl implements AuthController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private EtudiantRepository etudiantRepository;
+
+    @Autowired
+    private VigileRepository vigileRepository;
 
     @PostMapping("/login")
     @Override
@@ -55,19 +66,53 @@ public class AuthControllerImpl implements AuthController {
         User user = utilisateurOpt.get();
 
         if (user.getRole() == Role.ADMIN) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Les administrateurs ne peuvent pas se connecter via l'application mobile.");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body("Les administrateurs ne peuvent pas se connecter via l'application mobile.");
+        }
+
+        // Initialisation des champs spécifiques
+        String matricule = null;
+        String etudiantId = null;
+        String vigileId = null;
+
+        // Cas de l'étudiant
+        if (user.getRole() == Role.ETUDIANT) {
+            Optional<Etudiant> etudiantOpt = etudiantRepository.findByUser(user);
+            if (etudiantOpt.isPresent()) {
+                Etudiant etudiant = etudiantOpt.get();
+                matricule = etudiant.getMatricule();
+                etudiantId = etudiant.getId();
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body("Aucun étudiant associé à cet utilisateur.");
+            }
+        }
+
+        // Cas du vigile
+        if (user.getRole() == Role.VIGILE) {
+            Optional<Vigile> vigileOpt = vigileRepository.findByUser(user);
+            if (vigileOpt.isPresent()) {
+                vigileId = vigileOpt.get().getId();
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body("Aucun vigile associé à cet utilisateur.");
+            }
         }
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(loginRequest.getLogin());
         String jwt = jwtUtil.generateToken(userDetails);
 
-        UserWithoutPasswordDto userDto = new UserWithoutPasswordDto(
-                user.getId(),
-                user.getLogin(),
-                user.getNom(),
-                user.getPrenom(),
-                user.getRole()
-        );
+        UserWithoutPasswordDto userDto = UserWithoutPasswordDto.builder()
+                .id(user.getId())
+                .login(user.getLogin())
+                .nom(user.getNom())
+                .prenom(user.getPrenom())
+                .role(user.getRole())
+                .telephone(user.getTelephone())
+                .matricule(matricule)
+                .etudiantId(etudiantId)
+                .vigileId(vigileId)
+                .build();
 
         AuthWebResponseDto response = new AuthWebResponseDto(jwt, userDto);
         return ResponseEntity.ok(response);

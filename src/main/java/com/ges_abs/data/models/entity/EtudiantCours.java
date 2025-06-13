@@ -17,4 +17,12 @@ public class EtudiantCours extends AbstractEntity {
     private Etudiant etudiant;
     @DBRef
     private Cours cours;
+    @Override
+    public String toString() {
+        return "EtudiantCours{" +
+                "etudiant=" + (etudiant != null ? etudiant.getUser().getPrenom() + " " + etudiant.getUser().getNom() : "null") +
+                ", cours=" + (cours != null ? cours.getLibelle() : "null") +
+                '}';
+    }
+
 }
