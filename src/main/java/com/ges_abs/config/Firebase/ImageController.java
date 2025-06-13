@@ -18,9 +18,7 @@ public class ImageController {
         this.imageService = imageService;
     }
 
-    @Operation(
-            summary = "Uploader une image"
-    )
+    @Operation(summary = "Uploader une image")
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> uploadImage(
             @Parameter(description = "Fichier à uploader")
