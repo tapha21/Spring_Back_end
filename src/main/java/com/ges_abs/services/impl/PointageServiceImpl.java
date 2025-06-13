@@ -99,9 +99,11 @@ public class PointageServiceImpl implements PointageService {
 
         //  Enregistrement
         Pointage savedPointage = pointageRepository.save(pointage);
-
+        System.out.println(savedPointage);
+        System.out.println("ssession");
+        System.out.println(session);
         //  Traitement automatique des événements après pointage
-        traiterEvenementsSession(session);
+       traiterEvenementsSession(session);
 
         return savedPointage;
     }
@@ -111,10 +113,14 @@ public class PointageServiceImpl implements PointageService {
     @Override
     public void traiterEvenementsSession(Session session) {
         List<EtudiantCours> etudiants = etudiantCoursRepository.findByCours(session.getCours());
-
+        System.out.println(etudiants);
         for (EtudiantCours ec : etudiants) {
             Etudiant etudiant = ec.getEtudiant();
+            System.out.println("etudiant");
+            System.out.println(etudiant);
             Optional<Pointage> pointageOpt = pointageRepository.findByEtudiantAndSession(etudiant, session);
+            System.out.println("Pointageeuuuu");
+            System.out.println(pointageOpt);
 
             if (pointageOpt.isEmpty()) {
                 // ABSENCE
@@ -132,6 +138,7 @@ public class PointageServiceImpl implements PointageService {
                 evenementRepository.save(absence);
             } else {
                 Pointage pointage = pointageOpt.get();
+                System.out.println(pointage);
                 LocalTime heurePointage = pointage.getHeure();
                 if (heurePointage.isAfter(session.getHeureDebut()) && heurePointage.isBefore(session.getHeureFin())) {
                     // RETARD

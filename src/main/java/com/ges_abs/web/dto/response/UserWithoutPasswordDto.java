@@ -16,4 +16,6 @@ public class UserWithoutPasswordDto {
     private String telephone;
     private String matricule;
     private Role role;
+    private String etudiantId;
+    private String vigileId;
 }

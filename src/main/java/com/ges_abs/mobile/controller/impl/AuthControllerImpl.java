@@ -2,9 +2,11 @@ package com.ges_abs.mobile.controller.impl;
 
 import com.ges_abs.data.models.entity.Etudiant;
 import com.ges_abs.data.models.entity.User;
+import com.ges_abs.data.models.entity.Vigile;
 import com.ges_abs.data.models.enumeration.Role;
 import com.ges_abs.data.repository.EtudiantRepository;
 import com.ges_abs.data.repository.UserRepository;
+import com.ges_abs.data.repository.VigileRepository;
 import com.ges_abs.mobile.controller.inter.AuthController;
 import com.ges_abs.security.JWTUtil;
 import com.ges_abs.security.MyUserDetailsService;
@@ -39,6 +41,9 @@ public class AuthControllerImpl implements AuthController {
     @Autowired
     private EtudiantRepository etudiantRepository;
 
+    @Autowired
+    private VigileRepository vigileRepository;
+
     @PostMapping("/login")
     @Override
     public ResponseEntity<?> login(@RequestBody LoginWebRequestDto loginRequest) {
@@ -61,19 +66,36 @@ public class AuthControllerImpl implements AuthController {
         User user = utilisateurOpt.get();
 
         if (user.getRole() == Role.ADMIN) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Les administrateurs ne peuvent pas se connecter via l'application mobile.");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body("Les administrateurs ne peuvent pas se connecter via l'application mobile.");
         }
 
-        // Récupération du matricule si l'utilisateur est un étudiant
+        // Initialisation des champs spécifiques
         String matricule = null;
+        String etudiantId = null;
+        String vigileId = null;
+
+        // Cas de l'étudiant
         if (user.getRole() == Role.ETUDIANT) {
             Optional<Etudiant> etudiantOpt = etudiantRepository.findByUser(user);
             if (etudiantOpt.isPresent()) {
-                matricule = etudiantOpt.get().getMatricule();
+                Etudiant etudiant = etudiantOpt.get();
+                matricule = etudiant.getMatricule();
+                etudiantId = etudiant.getId();
             } else {
-                // Gestion explicite si aucun étudiant n'est trouvé
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                         .body("Aucun étudiant associé à cet utilisateur.");
+            }
+        }
+
+        // Cas du vigile
+        if (user.getRole() == Role.VIGILE) {
+            Optional<Vigile> vigileOpt = vigileRepository.findByUser(user);
+            if (vigileOpt.isPresent()) {
+                vigileId = vigileOpt.get().getId();
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body("Aucun vigile associé à cet utilisateur.");
             }
         }
 
@@ -88,6 +110,8 @@ public class AuthControllerImpl implements AuthController {
                 .role(user.getRole())
                 .telephone(user.getTelephone())
                 .matricule(matricule)
+                .etudiantId(etudiantId)
+                .vigileId(vigileId)
                 .build();
 
         AuthWebResponseDto response = new AuthWebResponseDto(jwt, userDto);
