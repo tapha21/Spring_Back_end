@@ -75,7 +75,7 @@ public class PointageServiceImpl implements PointageService {
 
         List<Session> sessionsDuJour = getCoursDuJour(etudiant);
 
-// 🔍 DEBUG : Affiche les sessions du jour
+        // 🔍 DEBUG : Affiche les sessions du jour
         if (sessionsDuJour.isEmpty()) {
             System.out.println("Aucune session trouvée pour aujourd'hui.");
         } else {
@@ -85,10 +85,11 @@ public class PointageServiceImpl implements PointageService {
         }
         System.out.println("===========================================");
 
-// 🔎 Recherche la session en cours
+        // 🔎 Recherche la session en cours
         Session session = getSessionEnCours(sessionsDuJour)
                 .orElseThrow(() -> new RuntimeException("Aucune session en cours trouvée pour cet étudiant"));
 
+        // ✅ Création du pointage
         Pointage pointage = new Pointage();
         pointage.setDate(LocalDate.now());
         pointage.setHeure(LocalTime.now());
@@ -96,8 +97,15 @@ public class PointageServiceImpl implements PointageService {
         pointage.setVigile(vigile);
         pointage.setSession(session);
 
-        return pointageRepository.save(pointage);
+        //  Enregistrement
+        Pointage savedPointage = pointageRepository.save(pointage);
+
+        //  Traitement automatique des événements après pointage
+        traiterEvenementsSession(session);
+
+        return savedPointage;
     }
+
 
 
     @Override
