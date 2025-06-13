@@ -73,7 +73,6 @@ public class PointageServiceImpl implements PointageService {
 
         List<Session> sessionsDuJour = getCoursDuJour(etudiant);
 
-        // 🔍 DEBUG : Affiche les sessions du jour
         if (sessionsDuJour.isEmpty()) {
             System.out.println("Aucune session trouvée pour aujourd'hui.");
         } else {
@@ -83,14 +82,13 @@ public class PointageServiceImpl implements PointageService {
         }
         System.out.println("===========================================");
 
-        // 🔎 Recherche la session en cours
         Session session = getSessionEnCours(sessionsDuJour)
                 .orElseThrow(() -> new RuntimeException("Aucune session en cours trouvée pour cet étudiant"));
 
         System.out.println("🟢 Session en cours : " + session);
 
 
-        // ✅ Création du pointage
+        //  Création du pointage
         Pointage pointage = new Pointage();
         pointage.setDate(LocalDate.now());
         pointage.setHeure(LocalTime.now());
@@ -102,8 +100,13 @@ public class PointageServiceImpl implements PointageService {
         if (etudiant.getPointageList() == null) {
             etudiant.setPointageList(new ArrayList<>());
         }
+        
         etudiant.getPointageList().add(pointage);
-
+         if (vigile.getPointageList() == null) {
+            vigile.setPointageList(new ArrayList<>());
+        }
+        
+        vigile.getPointageList().add(pointage);
         //Lien pointage-session
         if (session.getPointages() == null) {
             session.setPointages(new ArrayList<>());
@@ -114,14 +117,15 @@ public class PointageServiceImpl implements PointageService {
         Pointage savedPointage = pointageRepository.save(pointage);
 
         etudiantRepository.save(etudiant);
+        vigileRepository.save(vigile);
         sessionRepository.save(session);
 
-        System.out.println("✅ Pointage sauvegardé : " + savedPointage);
+        System.out.println(" Pointage sauvegardé : " + savedPointage);
         //  Traitement automatique des événements après pointage
         traiterEvenementsSession(session);
 
         List<Pointage> pointagesDeSession = pointageRepository.findBySession_Id(session.getId());
-        System.out.println("📋 Pointages réellement en base pour cette session :");
+        System.out.println(" Pointages réellement en base pour cette session :");
         pointagesDeSession.forEach(System.out::println);
 
 
