@@ -10,6 +10,7 @@ import com.ges_abs.services.inter.PointageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
@@ -54,27 +55,17 @@ public class PointageControllerImpl implements PointageController {
     }
 
     @Override
-    public ResponseEntity<Pointage> createPointage(PointageRequestDto dto) {
+    public ResponseEntity<Pointage> createPointage(@RequestParam("etudiantId") String etudiantId,
+                                                   @RequestParam("vigileId") String vigileId) {
         try {
-            Pointage pointage = new Pointage();
-            pointage.setDate(dto.getDate());
-            pointage.setHeure(dto.getHeure());
-
-            pointage.setVigile(vigileRepository.findById(dto.getVigileId())
-                    .orElseThrow(() -> new RuntimeException("Vigile introuvable")));
-
-            pointage.setEtudiant(etudiantRepository.findById(dto.getEtudiantId())
-                    .orElseThrow(() -> new RuntimeException("Étudiant introuvable")));
-
-            pointage.setSession(sessionRepository.findById(dto.getSessionId())
-                    .orElseThrow(() -> new RuntimeException("Session introuvable")));
-
-            Pointage created = pointageService.createPointage(pointage);
+            Pointage created = pointageService.enregistrerPointage(etudiantId, vigileId);
             return ResponseEntity.status(HttpStatus.CREATED).body(created);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        } catch (RuntimeException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
+
+
 
     @Override
     public ResponseEntity<Pointage> updatePointage(String id, PointageRequestDto dto) {

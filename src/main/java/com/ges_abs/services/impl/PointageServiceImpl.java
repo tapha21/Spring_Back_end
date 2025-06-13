@@ -61,21 +61,32 @@ public class PointageServiceImpl implements PointageService {
     }
 
     @Override
-    public void enregistrerPointage(String etudiantId, String vigileId) {
+    public Pointage enregistrerPointage(String etudiantId, String vigileId) {
+        System.out.println("Recherche de l'étudiant...");
         Etudiant etudiant = etudiantRepository.findById(etudiantId)
-                .orElseThrow(() -> new RuntimeException("Étudiant introuvable"));
+                .orElseThrow(() -> new RuntimeException("Étudiant introuvable avec l'ID : " + etudiantId));
+        System.out.println("Étudiant trouvé : " + etudiant.getUser().getPrenom());
 
+        System.out.println("Recherche du vigile...");
         Vigile vigile = vigileRepository.findById(vigileId)
-                .orElseThrow(() -> new RuntimeException("Vigile introuvable"));
+                .orElseThrow(() -> new RuntimeException("Vigile introuvable avec l'ID : " + vigileId));
+        System.out.println("Vigile trouvé : " + vigile.getUser().getPrenom());
 
         List<Session> sessionsDuJour = getCoursDuJour(etudiant);
 
         Session session = getSessionEnCours(sessionsDuJour)
-                .orElseThrow(() -> new RuntimeException("Aucune session en cours trouvée pour l'étudiant"));
+                .orElseThrow(() -> new RuntimeException("Aucune session en cours trouvée pour cet étudiant"));
 
-        Pointage pointage = new Pointage(LocalDate.now(), LocalTime.now(), vigile, etudiant, session);
-        pointageRepository.save(pointage);
+        Pointage pointage = new Pointage();
+        pointage.setDate(LocalDate.now());
+        pointage.setHeure(LocalTime.now());
+        pointage.setEtudiant(etudiant);
+        pointage.setVigile(vigile);
+        pointage.setSession(session);
+
+        return pointageRepository.save(pointage);
     }
+
 
     @Override
     public void traiterEvenementsSession(Session session) {
