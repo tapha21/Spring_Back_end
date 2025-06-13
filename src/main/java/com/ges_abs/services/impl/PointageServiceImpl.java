@@ -63,12 +63,10 @@ public class PointageServiceImpl implements PointageService {
 
     @Override
     public Pointage enregistrerPointage(String etudiantId, String vigileId) {
-        System.out.println("Recherche de l'étudiant...");
         Etudiant etudiant = etudiantRepository.findById(etudiantId)
                 .orElseThrow(() -> new RuntimeException("Étudiant introuvable avec l'ID : " + etudiantId));
         System.out.println("Étudiant trouvé : " + etudiant.getUser().getPrenom());
 
-        System.out.println("Recherche du vigile...");
         Vigile vigile = vigileRepository.findById(vigileId)
                 .orElseThrow(() -> new RuntimeException("Vigile introuvable avec l'ID : " + vigileId));
         System.out.println("Vigile trouvé : " + vigile.getUser().getPrenom());
@@ -89,6 +87,9 @@ public class PointageServiceImpl implements PointageService {
         Session session = getSessionEnCours(sessionsDuJour)
                 .orElseThrow(() -> new RuntimeException("Aucune session en cours trouvée pour cet étudiant"));
 
+        System.out.println("🟢 Session en cours : " + session);
+
+
         // ✅ Création du pointage
         Pointage pointage = new Pointage();
         pointage.setDate(LocalDate.now());
@@ -97,13 +98,32 @@ public class PointageServiceImpl implements PointageService {
         pointage.setVigile(vigile);
         pointage.setSession(session);
 
-        //  Enregistrement
+        //Lien pointage-etudiant
+        if (etudiant.getPointageList() == null) {
+            etudiant.setPointageList(new ArrayList<>());
+        }
+        etudiant.getPointageList().add(pointage);
+
+        //Lien pointage-session
+        if (session.getPointages() == null) {
+            session.setPointages(new ArrayList<>());
+        }
+        session.getPointages().add(pointage);
+
+        //  Enregistrements
         Pointage savedPointage = pointageRepository.save(pointage);
-        System.out.println(savedPointage);
-        System.out.println("ssession");
-        System.out.println(session);
+
+        etudiantRepository.save(etudiant);
+        sessionRepository.save(session);
+
+        System.out.println("✅ Pointage sauvegardé : " + savedPointage);
         //  Traitement automatique des événements après pointage
-       traiterEvenementsSession(session);
+        traiterEvenementsSession(session);
+
+        List<Pointage> pointagesDeSession = pointageRepository.findBySession_Id(session.getId());
+        System.out.println("📋 Pointages réellement en base pour cette session :");
+        pointagesDeSession.forEach(System.out::println);
+
 
         return savedPointage;
     }
@@ -116,10 +136,11 @@ public class PointageServiceImpl implements PointageService {
         System.out.println(etudiants);
         for (EtudiantCours ec : etudiants) {
             Etudiant etudiant = ec.getEtudiant();
-            System.out.println("etudiant");
             System.out.println(etudiant);
-            Optional<Pointage> pointageOpt = pointageRepository.findByEtudiantAndSession(etudiant, session);
-            System.out.println("Pointageeuuuu");
+            System.out.println(session);
+            System.out.println("🔍 Recherche du pointage de l'étudiant " + etudiant.getId() + " pour la session " + session.getId());
+            Optional<Pointage> pointageOpt = pointageRepository.findByEtudiant_IdAndSession_Id(
+                    etudiant.getId(), session.getId());
             System.out.println(pointageOpt);
 
             if (pointageOpt.isEmpty()) {
@@ -136,10 +157,13 @@ public class PointageServiceImpl implements PointageService {
                         session
                 );
                 evenementRepository.save(absence);
+                session.getEvenements().add(absence);
+                sessionRepository.save(session);
             } else {
                 Pointage pointage = pointageOpt.get();
                 System.out.println(pointage);
                 LocalTime heurePointage = pointage.getHeure();
+                LocalTime seuilRetard = session.getHeureDebut().plusMinutes(10);
                 if (heurePointage.isAfter(session.getHeureDebut()) && heurePointage.isBefore(session.getHeureFin())) {
                     // RETARD
                     Evenement retard = new Evenement(
@@ -148,12 +172,14 @@ public class PointageServiceImpl implements PointageService {
                             heurePointage,
                             null,
                             null,
-                            Etat.ENATTENTE,
+                            Etat.NOJUSTIFIE,
                             Type.RETARD,
                             etudiant,
                             session
                     );
                     evenementRepository.save(retard);
+                    session.getEvenements().add(retard);
+                    sessionRepository.save(session);
                 }
             }
         }
