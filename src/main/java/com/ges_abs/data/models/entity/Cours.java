@@ -31,4 +31,10 @@ public class Cours extends AbstractEntity {
         this.professeur = professeur;
         this.classe = classe;
     }
+    @Override
+    public String toString() {
+        return "Cours{id=" + getId() + ", libelle=" + libelle
+                + ", professeur=" + (professeur != null ? professeur.getNom() : "inconnu") + "}";
+    }
+
 }

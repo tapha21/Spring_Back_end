@@ -17,6 +17,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @Document(collection = "professeur")
+
 public class Professeur extends AbstractEntity{
     private String nom;
     private String prenom;
@@ -32,4 +33,10 @@ public class Professeur extends AbstractEntity{
         this.telephone = telephone;
         this.role = role;
     }
+    @Override
+    public String toString() {
+        return "Professeur{id=" + getId() + ", nom=" + nom + ", prenom=" + prenom + "}";
+    }
+
+
 }

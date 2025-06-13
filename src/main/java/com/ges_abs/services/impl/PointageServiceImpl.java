@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -74,6 +75,17 @@ public class PointageServiceImpl implements PointageService {
 
         List<Session> sessionsDuJour = getCoursDuJour(etudiant);
 
+// 🔍 DEBUG : Affiche les sessions du jour
+        if (sessionsDuJour.isEmpty()) {
+            System.out.println("Aucune session trouvée pour aujourd'hui.");
+        } else {
+            for (Session s : sessionsDuJour) {
+                System.out.println("- Session de " + s.getHeureDebut() + " à " + s.getHeureFin());
+            }
+        }
+        System.out.println("===========================================");
+
+// 🔎 Recherche la session en cours
         Session session = getSessionEnCours(sessionsDuJour)
                 .orElseThrow(() -> new RuntimeException("Aucune session en cours trouvée pour cet étudiant"));
 
@@ -135,10 +147,14 @@ public class PointageServiceImpl implements PointageService {
     @Override
     public List<Session> getCoursDuJour(Etudiant etudiant) {
         LocalDate today = LocalDate.now();
+        List<Cours> coursList=new ArrayList<>();
         List<EtudiantCours> etudiantCoursList = etudiantCoursRepository.findByEtudiant(etudiant);
-        List<Cours> coursList = etudiantCoursList.stream()
-                .map(EtudiantCours::getCours)
-                .collect(Collectors.toList());
+        System.out.println(etudiantCoursList);
+        for (EtudiantCours et : etudiantCoursList) {
+            Cours cours = et.getCours();
+            System.out.println(cours);
+            coursList.add(cours);
+        }
 
         return sessionRepository.findByCoursInAndDate(coursList, today);
     }
