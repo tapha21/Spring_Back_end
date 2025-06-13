@@ -27,6 +27,12 @@ public class JWTRequestFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String requestPath = request.getServletPath();
+        String path = request.getServletPath();
+        if (path.equals("/api/images/upload")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         if (requestPath.startsWith("/api/web/auth/login")) {
             filterChain.doFilter(request, response);
             return;

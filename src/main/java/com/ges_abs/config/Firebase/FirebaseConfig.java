@@ -1,39 +1,35 @@
-// package com.ges_abs.config.Firebase;
+ package com.ges_abs.config.Firebase;
 
-// import java.io.ByteArrayInputStream;
+ import java.io.*;
 
-// import org.springframework.context.annotation.Configuration;
+ import org.springframework.context.annotation.Configuration;
 
-// import com.google.auth.oauth2.GoogleCredentials;
-// import com.google.firebase.FirebaseApp;
-// import com.google.firebase.FirebaseOptions;
+ import com.google.auth.oauth2.GoogleCredentials;
+ import com.google.firebase.FirebaseApp;
+ import com.google.firebase.FirebaseOptions;
 
-// import jakarta.annotation.PostConstruct;
+ import jakarta.annotation.PostConstruct;
 
-// @Configuration
-// public class FirebaseConfig {
+ @Configuration
+ public class FirebaseConfig {
 
-//     @PostConstruct
-//     public void init() {
-//         try {
-//             String serviceAccountJson = System.getenv("FIREBASE_SERVICE_ACCOUNT");
+     @PostConstruct
+     public void initializeFirebase() throws IOException {
+         File file = new File("src/main/resources/firebase/firebase-config.json");
+         if (!file.exists()) {
+             throw new FileNotFoundException("Fichier firebase-config.json manquant !");
+         }
 
-//             if (serviceAccountJson == null) {
-//                 throw new IllegalStateException("La variable d'environnement FIREBASE_SERVICE_ACCOUNT n'est pas définie !");
-//             }
+         FileInputStream serviceAccount = new FileInputStream(file);
 
-//             ByteArrayInputStream serviceAccount = new ByteArrayInputStream(serviceAccountJson.getBytes());
+         FirebaseOptions options = new FirebaseOptions.Builder()
+                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+                 .setStorageBucket("pointage-d36f1.appspot.com")
+                 .build();
 
-//             FirebaseOptions options = FirebaseOptions.builder()
-//                     .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-//                     .setStorageBucket("pointage-d36f1.appspot.com")
-//                     .build();
+         if (FirebaseApp.getApps().isEmpty()) {
+             FirebaseApp.initializeApp(options);
+         }
+     }
 
-//             if (FirebaseApp.getApps().isEmpty()) {
-//                 FirebaseApp.initializeApp(options);
-//             }
-//         } catch (Exception e) {
-//             e.printStackTrace();
-//         }
-//     }
-// }
+ }

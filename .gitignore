@@ -31,3 +31,5 @@ build/
 
 ### VS Code ###
 .vscode/
+# Fichier de config Firebase
+/src/main/resources/firebase/firebase-config.json
