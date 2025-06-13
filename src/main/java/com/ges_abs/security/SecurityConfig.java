@@ -44,7 +44,7 @@ public class SecurityConfig {
 //                                .requestMatchers("/api/web/**").permitAll()
                                 //.requestMatchers("/api/mobile/**").hasAnyRole("ETUDIANT", "VIGILE")
                         .requestMatchers("/api/mobile/**").permitAll()
-                      .anyRequest().authenticated()
+                    //   .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)

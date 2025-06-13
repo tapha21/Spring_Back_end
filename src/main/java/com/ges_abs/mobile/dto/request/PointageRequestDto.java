@@ -1,6 +1,5 @@
 package com.ges_abs.mobile.dto.request;
 
-import com.ges_abs.data.models.entity.Pointage;
 import lombok.Builder;
 import lombok.Data;
 
@@ -14,5 +13,5 @@ public class PointageRequestDto {
     private LocalTime heure;
     private String vigileId;
     private String etudiantId;
-    private Pointage pointage;
+    private String sessionId;
 }

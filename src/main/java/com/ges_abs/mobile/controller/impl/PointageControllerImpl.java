@@ -1,12 +1,13 @@
 package com.ges_abs.mobile.controller.impl;
 
 import com.ges_abs.data.models.entity.Pointage;
+import com.ges_abs.data.repository.EtudiantRepository;
+import com.ges_abs.data.repository.SessionRepository;
+import com.ges_abs.data.repository.VigileRepository;
 import com.ges_abs.mobile.controller.inter.PointageController;
+import com.ges_abs.mobile.dto.request.PointageRequestDto;
 import com.ges_abs.services.inter.PointageService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,10 +21,19 @@ import java.util.Optional;
 public class PointageControllerImpl implements PointageController {
 
     private final PointageService pointageService;
+    private final VigileRepository vigileRepository;
+    private final EtudiantRepository etudiantRepository;
+    private final SessionRepository sessionRepository;
 
     @Autowired
-    public PointageControllerImpl(PointageService pointageService) {
+    public PointageControllerImpl(PointageService pointageService,
+                                  VigileRepository vigileRepository,
+                                  EtudiantRepository etudiantRepository,
+                                  SessionRepository sessionRepository) {
         this.pointageService = pointageService;
+        this.vigileRepository = vigileRepository;
+        this.etudiantRepository = etudiantRepository;
+        this.sessionRepository = sessionRepository;
     }
 
     @Override
@@ -39,27 +49,59 @@ public class PointageControllerImpl implements PointageController {
     public ResponseEntity<Pointage> getPointageById(String id) {
         Optional<Pointage> pointageOpt = pointageService.getPointageById(id);
         return pointageOpt
-                .map(pointage -> ResponseEntity.ok(pointage))
+                .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
     @Override
-    public ResponseEntity<Pointage> createPointage(Pointage pointage) {
-        Pointage created = pointageService.createPointage(pointage);
-        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+    public ResponseEntity<Pointage> createPointage(PointageRequestDto dto) {
+        try {
+            Pointage pointage = new Pointage();
+            pointage.setDate(dto.getDate());
+            pointage.setHeure(dto.getHeure());
+
+            pointage.setVigile(vigileRepository.findById(dto.getVigileId())
+                    .orElseThrow(() -> new RuntimeException("Vigile introuvable")));
+
+            pointage.setEtudiant(etudiantRepository.findById(dto.getEtudiantId())
+                    .orElseThrow(() -> new RuntimeException("Étudiant introuvable")));
+
+            pointage.setSession(sessionRepository.findById(dto.getSessionId())
+                    .orElseThrow(() -> new RuntimeException("Session introuvable")));
+
+            Pointage created = pointageService.createPointage(pointage);
+            return ResponseEntity.status(HttpStatus.CREATED).body(created);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 
     @Override
-    public ResponseEntity<Pointage> updatePointage(String id, Pointage updatedPointage) {
+    public ResponseEntity<Pointage> updatePointage(String id, PointageRequestDto dto) {
         Optional<Pointage> existingPointageOpt = pointageService.getPointageById(id);
         if (existingPointageOpt.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        Pointage existingPointage = existingPointageOpt.get();
+        try {
+            Pointage existingPointage = existingPointageOpt.get();
+            existingPointage.setDate(dto.getDate());
+            existingPointage.setHeure(dto.getHeure());
 
-        Pointage saved = pointageService.createPointage(existingPointage);
-        return ResponseEntity.ok(saved);
+            existingPointage.setVigile(vigileRepository.findById(dto.getVigileId())
+                    .orElseThrow(() -> new RuntimeException("Vigile introuvable")));
+
+            existingPointage.setEtudiant(etudiantRepository.findById(dto.getEtudiantId())
+                    .orElseThrow(() -> new RuntimeException("Étudiant introuvable")));
+
+            existingPointage.setSession(sessionRepository.findById(dto.getSessionId())
+                    .orElseThrow(() -> new RuntimeException("Session introuvable")));
+
+            Pointage updated = pointageService.createPointage(existingPointage);
+            return ResponseEntity.ok(updated);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 
     @Override

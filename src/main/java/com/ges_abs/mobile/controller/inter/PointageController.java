@@ -1,6 +1,8 @@
 package com.ges_abs.mobile.controller.inter;
 
 import com.ges_abs.data.models.entity.Pointage;
+import com.ges_abs.mobile.dto.request.PointageRequestDto;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -20,11 +22,10 @@ public interface PointageController {
 
 
     @PostMapping("/create")
-    ResponseEntity<Pointage> createPointage(@RequestBody Pointage pointage);
+    ResponseEntity<Pointage> createPointage(PointageRequestDto dto);
 
     @PutMapping("/{id}")
-    ResponseEntity<Pointage> updatePointage(@PathVariable String id, @RequestBody Pointage updatedPointage);
-
+ResponseEntity<Pointage> updatePointage(String id, PointageRequestDto dto);
     @DeleteMapping("/{id}")
     ResponseEntity<Void> deletePointage(@PathVariable String id);
 
