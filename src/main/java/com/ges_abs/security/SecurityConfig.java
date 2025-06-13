@@ -43,8 +43,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/web/**").hasRole("ADMIN")
                         //.requestMatchers("/api/mobile/**").hasAnyRole("ETUDIANT", "VIGILE")
                         .requestMatchers("/api/mobile/**").permitAll()     
-                        .requestMatchers("/api/**").permitAll()     
-                        .requestMatchers("/api/mobile/**").hasAnyRole("ETUDIANT", "VIGILE")
+//                        .requestMatchers("/api/**").permitAll()
+//                        .requestMatchers("/api/mobile/**").hasAnyRole("ETUDIANT", "VIGILE")
 
                         .anyRequest().authenticated()
                 )

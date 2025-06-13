@@ -14,6 +14,7 @@ public interface AbsenceWebMapper {
     AbsenceWebMapper INSTANCE = Mappers.getMapper(AbsenceWebMapper.class);
    @Mapping(source = "justificatifImage", target = "justificatifImage")
 @Mapping(source = "session", target = "session")
+   @Mapping(source = "etudiant", target = "etudiant")
 AbsenceWebResponseDto toDto(Evenement absence);
     Evenement ToEntity(AbsenceWebRequestDto userDto);
 
