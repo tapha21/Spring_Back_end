@@ -1,7 +1,10 @@
 package com.ges_abs.config.Firebase;
 
-import org.springframework.http.HttpStatus;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,8 +18,12 @@ public class ImageController {
         this.imageService = imageService;
     }
 
-    @PostMapping("/upload")
-    public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile file) {
+    @Operation(summary = "Uploader une image")
+    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> uploadImage(
+            @Parameter(description = "Fichier à uploader")
+            @RequestParam("file") MultipartFile file
+    ) {
         try {
             if (file.isEmpty()) {
                 return ResponseEntity.badRequest().body("Aucun fichier n'a été fourni");
@@ -27,8 +34,7 @@ public class ImageController {
 
             return ResponseEntity.ok(imageUrl);
         } catch (Exception e) {
-            e.printStackTrace(); // Log pour debug
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Échec de l'upload de l'image");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Upload failed: " + e.getMessage());
         }
     }
 }
