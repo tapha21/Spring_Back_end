@@ -33,15 +33,16 @@ public interface AbsenceRepository extends MongoRepository<Evenement, String> {
     Page<Evenement> findByEtatAndType(Etat etat, Type type, Pageable pageable);
     Page<Evenement> findByEtudiant_Matricule(String matricule, Pageable pageable);
 
-    @Query("{ $and: [ " +
-            " { $or: [ { 'type': ?0 }, { ?0: null } ] }, " +
-            " { $or: [ { 'etat': ?1 }, { ?1: null } ] }, " +
-            " { $or: [ { 'etudiant.matricule': { $regex: ?2, $options: 'i' } }, { ?2: null } ] } " +
-            "] }")
-    Page<Evenement> findByEtatAndTypeAndMatricule(
-            @Param("etat") Etat etat,
-            @Param("type") Type type,
-            @Param("matricule") String matricule,
-            Pageable pageable
-    );
+    @Query("""
+    {
+      $and: [
+        { $or: [ { 'etat': ?0 }, { ?0: null } ] },
+        { $or: [ { 'type': ?1 }, { ?1: null } ] },
+        { $or: [ { 'etudiant.$id': ?2 }, { ?2: null } ] }
+      ]
+    }
+    """)
+    Page<Evenement> findByEtatAndTypeAndEtudiant_Id(Etat etat, Type type, String etudiantId, Pageable pageable);
+
+    Page<Evenement> findByTypeAndEtudiant_Id(Type typeEnum, String etudiantId, Pageable pageable);
 }

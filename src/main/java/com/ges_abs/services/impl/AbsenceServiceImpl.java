@@ -1,6 +1,8 @@
 package com.ges_abs.services.impl;
 
+import com.ges_abs.data.models.entity.Etudiant;
 import com.ges_abs.data.repository.AbsenceRepository;
+import com.ges_abs.data.repository.EtudiantRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -8,25 +10,24 @@ import com.ges_abs.data.models.entity.Evenement;
 import com.ges_abs.data.models.enumeration.Etat;
 import com.ges_abs.data.models.enumeration.Type;
 import com.ges_abs.services.inter.AbsenceService;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class AbsenceServiceImpl  implements AbsenceService {
+    private final EtudiantRepository etudiantRepository;
     private AbsenceRepository absenceRepository;
-    public AbsenceServiceImpl(AbsenceRepository absenceRepository) {
+    public AbsenceServiceImpl(AbsenceRepository absenceRepository, EtudiantRepository etudiantRepository) {
         this.absenceRepository = absenceRepository;
-
+        this.etudiantRepository = etudiantRepository;
     }
 
     @Override
@@ -146,6 +147,32 @@ public class AbsenceServiceImpl  implements AbsenceService {
 
     @Override
     public Page<Evenement> findByEtatAndTypeAndMatricule(Etat etatEnum, Type typeEnum, String matricule, Pageable pageable) {
-        return absenceRepository.findByEtatAndTypeAndMatricule(etatEnum, typeEnum, matricule, pageable);
+        String etudiantId = null;
+
+        if (matricule != null && !matricule.isEmpty()) {
+            Optional<Etudiant> etudiantOpt = etudiantRepository.findByMatricule(matricule);
+            if (etudiantOpt.isEmpty()) {
+                return Page.empty(); // ou tu peux throw une exception
+            }
+            etudiantId = etudiantOpt.get().getId();
+        }
+
+        if (etatEnum != null && typeEnum != null && etudiantId != null) {
+            return absenceRepository.findByEtatAndTypeAndEtudiant_Id(etatEnum, typeEnum, etudiantId, pageable);
+        } else if (etatEnum != null && typeEnum != null) {
+            return absenceRepository.findByEtatAndType(etatEnum, typeEnum, pageable);
+        } else if (etatEnum != null && etudiantId != null) {
+            return absenceRepository.findEtudiantByEtat(etatEnum, etudiantId, pageable);
+        } else if (typeEnum != null && etudiantId != null) {
+            return absenceRepository.findByTypeAndEtudiant_Id(typeEnum, etudiantId, pageable);
+        } else if (etatEnum != null) {
+            return absenceRepository.findByEtat(etatEnum, pageable);
+        } else if (typeEnum != null) {
+            return absenceRepository.findByType(typeEnum, pageable);
+        } else if (etudiantId != null) {
+            return absenceRepository.findByEtudiant_Id(etudiantId, pageable);
+        } else {
+            return absenceRepository.findAll(pageable);
+        }
     }
 }

@@ -36,20 +36,19 @@ public class SecurityConfig {
 
                 .csrf(AbstractHttpConfigurer::disable)
 
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**").permitAll()
+                .authorizeHttpRequests(auth -> auth.anyRequest().permitAll()
+                                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**").permitAll()
 
-                        .requestMatchers("/api/web/auth/login").permitAll()
-                        .requestMatchers("/api/mobile/auth/login").permitAll()
+                                .requestMatchers("/api/web/auth/login").permitAll()
+                                .requestMatchers("/api/mobile/auth/login").permitAll()
 
-                        .requestMatchers("/api/images/upload").hasAuthority("ROLE_ETUDIANT")
-//                                .requestMatchers("/api/mobile/absences/**").hasAnyRole("VIGILE", "ETUDIANT")
+                                .requestMatchers("/api/images/upload").hasAuthority("ROLE_ETUDIANT")
                                 .requestMatchers("/api/mobile/absences/**").hasAuthority("ROLE_ETUDIANT")
 
                                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                       .requestMatchers("/api/web/**").hasAuthority("ROLE_ADMIN")
+                                .requestMatchers("/api/web/**").hasAuthority("ROLE_ADMIN")
 
-                       .anyRequest().authenticated()
+                        .anyRequest().authenticated()
                 )
 
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

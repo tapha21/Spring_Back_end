@@ -12,9 +12,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.swing.text.html.Option;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 public class EtudiantControllerImpl implements EtudiantController {
@@ -49,7 +51,7 @@ public class EtudiantControllerImpl implements EtudiantController {
     @Override
     public ResponseEntity<Map<String, Object>> getByMatricule(String matricule) {
 
-        List<Etudiant> etudiants = etudiantService.findByMatricule(matricule);
+        Optional<Etudiant> etudiants = etudiantService.findByMatricule(matricule);
         var data = etudiants.stream()
                 .map(etudiantMobileMapper::toDto)
                 .toList();

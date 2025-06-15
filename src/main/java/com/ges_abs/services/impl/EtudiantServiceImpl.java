@@ -9,6 +9,8 @@ import com.ges_abs.services.inter.EtudiantService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+
 @Service
 public class EtudiantServiceImpl implements EtudiantService {
     EtudiantRepository etudiantRepository;
@@ -31,7 +33,7 @@ public class EtudiantServiceImpl implements EtudiantService {
     }
 
     @Override
-    public List<Etudiant> findByMatricule(String matricule) {
+    public Optional<Etudiant> findByMatricule(String matricule) {
         return etudiantRepository.findByMatricule(matricule);
     }
 
