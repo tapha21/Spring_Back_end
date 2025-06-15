@@ -47,7 +47,7 @@ public class SecurityConfig {
                                 .requestMatchers("/api/mobile/**").permitAll()
 
                                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                                .requestMatchers("/api/web/**").hasAuthority("ROLE_ADMIN")
+                                .requestMatchers("/api/web/absences/**").hasAuthority("ROLE_ADMIN")
 
                         .anyRequest().authenticated()
                 )
