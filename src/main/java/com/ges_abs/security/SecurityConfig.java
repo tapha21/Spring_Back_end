@@ -43,7 +43,8 @@ public class SecurityConfig {
                                 .requestMatchers("/api/mobile/auth/login").permitAll()
 
                                 .requestMatchers("/api/images/upload").hasAuthority("ROLE_ETUDIANT")
-                                .requestMatchers("/api/mobile/absences/**").hasAuthority("ROLE_ETUDIANT")
+                                //.requestMatchers("/api/mobile/**").hasAuthority("ROLE_ETUDIANT")
+                                .requestMatchers("/api/mobile/**").permitAll()
 
                                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                                 .requestMatchers("/api/web/**").hasAuthority("ROLE_ADMIN")

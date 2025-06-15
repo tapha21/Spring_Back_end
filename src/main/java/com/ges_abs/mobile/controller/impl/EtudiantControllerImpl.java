@@ -1,18 +1,18 @@
 package com.ges_abs.mobile.controller.impl;
 
 import com.ges_abs.data.models.entity.Etudiant;
+import com.ges_abs.data.models.entity.Session;
 import com.ges_abs.mobile.Mapper.EtudiantMobileMapper;
 import com.ges_abs.mobile.controller.inter.EtudiantController;
+import com.ges_abs.mobile.dto.response.SessionMobileMapperBis;
+import com.ges_abs.mobile.dto.response.SessionMobileResponseDto;
 import com.ges_abs.services.inter.EtudiantService;
-import com.ges_abs.web.Mapper.EtudiantWebMapper;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import com.ges_abs.services.inter.SessionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.swing.text.html.Option;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,10 +22,14 @@ import java.util.Optional;
 public class EtudiantControllerImpl implements EtudiantController {
     private final EtudiantService etudiantService;
     private final EtudiantMobileMapper etudiantMobileMapper;
+    private final SessionService sessionService;
+    private final SessionMobileMapperBis sessionMobileMapperBis;
 
-    public EtudiantControllerImpl(EtudiantService etudiantService,EtudiantMobileMapper etudiantMobileMapper) {
+    public EtudiantControllerImpl(EtudiantService etudiantService, EtudiantMobileMapper etudiantMobileMapper, SessionService sessionService, SessionMobileMapperBis sessionMobileMapperBis) {
         this.etudiantService = etudiantService;
         this.etudiantMobileMapper = etudiantMobileMapper;
+        this.sessionService = sessionService;
+        this.sessionMobileMapperBis = sessionMobileMapperBis;
     }
 
     @Override
@@ -61,4 +65,20 @@ public class EtudiantControllerImpl implements EtudiantController {
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    @Override
+    public ResponseEntity<?> getSessionActuelleOuProchaine(String id) {
+        Optional<Session> sessionOpt = sessionService.getSessionActuelleOuProchaine(id);
+
+        if (sessionOpt.isPresent()) {
+            SessionMobileResponseDto dto = sessionMobileMapperBis.toDto(sessionOpt.get());
+            return ResponseEntity.ok(dto);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("message", "Aucune session trouvée pour aujourd'hui"));
+        }
+    }
+
+
+
 }
