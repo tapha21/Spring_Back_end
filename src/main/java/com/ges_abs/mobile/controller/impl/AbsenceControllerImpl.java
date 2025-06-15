@@ -4,7 +4,9 @@ package com.ges_abs.mobile.controller.impl;
 import com.ges_abs.data.models.entity.Evenement;
 import com.ges_abs.data.models.enumeration.Etat;
 import com.ges_abs.data.models.enumeration.Type;
+import com.ges_abs.mobile.Mapper.AbsenceMobileMapper;
 import com.ges_abs.mobile.controller.inter.AbsenceController;
+import com.ges_abs.mobile.dto.response.AbsenceResponseDto;
 import com.ges_abs.services.inter.AbsenceService;
 import com.ges_abs.web.Mapper.AbsenceWebMapper;
 import com.ges_abs.web.dto.response.AbsenceWebResponseDto;
@@ -80,8 +82,8 @@ public class AbsenceControllerImpl implements AbsenceController {
     @Override
     public ResponseEntity<Map<String, Object>> getByEtudiant(String etudiantId) {
         List<Evenement> absences = absenceService.findByEtudiantId(etudiantId);
-        List<AbsenceWebResponseDto> data = absences.stream()
-                .map(AbsenceWebMapper.INSTANCE::toDto)
+        List<AbsenceResponseDto> data = absences.stream()
+                .map(AbsenceMobileMapper.INSTANCE::toDto)
                 .toList();
         return ResponseEntity.ok(Map.of(
                 "message", "Absences de l'étudiant ID : " + etudiantId,

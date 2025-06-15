@@ -272,7 +272,25 @@ public class AbsenceWebControllerImpl implements AbsenceWebController {
 
         return ResponseEntity.ok(response);
     }
-    
+    @Override
+    public ResponseEntity<Map<String, Object>> getByMatricule(String matricule, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Evenement> absences = absenceService.findByMatricule(matricule, pageable);
+
+        var data = absences.getContent().stream()
+                .map(AbsenceWebMapper.INSTANCE::toDto)
+                .toList();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "Liste des absences de l'étudiant avec le matricule : " + matricule);
+        response.put("data", data);
+        response.put("currentPage", absences.getNumber());
+        response.put("totalItems", absences.getTotalElements());
+        response.put("totalPages", absences.getTotalPages());
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
 
 
 }

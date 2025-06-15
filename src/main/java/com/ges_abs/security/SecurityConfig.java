@@ -32,38 +32,29 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, CorsConfigurationSource corsConfigurationSource) throws Exception {
         return http
-                // Active CORS avec ta config CorsConfig
                 .cors(cors -> cors.configurationSource(corsConfigurationSource))
 
-                // Désactive CSRF pour REST API
                 .csrf(AbstractHttpConfigurer::disable)
 
-                // Configuration des règles d’accès
                 .authorizeHttpRequests(auth -> auth
-                        // Autorise Swagger UI et doc sans auth
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**").permitAll()
-                        
-                        // Autorise login sans auth
+
                         .requestMatchers("/api/web/auth/login").permitAll()
                         .requestMatchers("/api/mobile/auth/login").permitAll()
-                        
-                        // Autorise upload image sans auth
+
                         .requestMatchers("/api/images/upload").permitAll()
-                        
-                        // Autorise toutes les requêtes OPTIONS (préflight CORS)
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        
-                        // Exemple : les routes web sont pour ADMIN uniquement (à adapter)
-                        .requestMatchers("/api/web/**").hasRole("ADMIN")
-                        
-                        // Autorise toutes les autres requêtes (à adapter selon ton besoin)
-                        .anyRequest().authenticated()
+//                                .requestMatchers("/api/mobile/absences/**").hasAnyRole("USER", "ETUDIANT")
+                                .requestMatchers("/api/mobile/absences/**").permitAll()
+
+                                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                                .requestMatchers("/api/web/absences/**").permitAll()
+//                        .requestMatchers("/api/web/**").hasRole("ADMIN")
+
+//                        .anyRequest().authenticated()
                 )
 
-                // Pas de session (stateless JWT)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-                // Ajout du filtre JWT avant UsernamePasswordAuthenticationFilter
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
 
                 .build();

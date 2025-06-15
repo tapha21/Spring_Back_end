@@ -55,4 +55,11 @@ public interface AbsenceWebController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size
     );
+    @GetMapping("/etudiant/matricule/{matricule}")
+    ResponseEntity<Map<String, Object>> getByMatricule(
+            @PathVariable String matricule,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size
+    );
+
 }

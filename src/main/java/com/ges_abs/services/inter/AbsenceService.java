@@ -29,5 +29,6 @@ public interface AbsenceService {
         Evenement update(Evenement evenement);
         List<Evenement> findAllAbsencesWithSession();
         Page<Evenement> findByEtatAndType(Etat etat, Type type, Pageable pageable);
+        Page<Evenement> findByMatricule(String matricule, Pageable pageable);
 
 }

@@ -139,5 +139,11 @@ public class AbsenceServiceImpl  implements AbsenceService {
             }
 }
 
+    @Override
+    public Page<Evenement> findByMatricule(String matricule, Pageable pageable) {
+        return absenceRepository.findByEtudiant_Matricule(matricule, pageable);
+    }
+
+
 
 }
