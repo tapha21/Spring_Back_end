@@ -17,7 +17,7 @@ public class AbsenceWebResponseDto {
     private LocalTime heureDebut;
     private LocalTime heureFin;
     private String justification;
-    private List<String> justificatifImage;
+    //private List<String> justificatifImage;
     private Etat etat;
     private Type type;
     private EtudiantSimpleWebResponseDto etudiant;
