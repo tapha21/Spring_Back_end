@@ -1,35 +1,37 @@
- package com.ges_abs.config.Firebase;
+package com.ges_abs.config.Firebase;
 
- import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
 
- import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 
- import com.google.auth.oauth2.GoogleCredentials;
- import com.google.firebase.FirebaseApp;
- import com.google.firebase.FirebaseOptions;
+import com.google.auth.oauth2.GoogleCredentials;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
 
- import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
- @Configuration
- public class FirebaseConfig {
+@Configuration
+public class FirebaseConfig {
 
-     @PostConstruct
-     public void initializeFirebase() throws IOException {
-         File file = new File("src/main/resources/firebase/firebase-config.json");
-         if (!file.exists()) {
-             throw new FileNotFoundException("Fichier firebase-config.json manquant !");
-         }
+    @PostConstruct
+    public void initializeFirebase() throws IOException {
+        ClassPathResource resource = new ClassPathResource("firebase/firebase-config.json");
 
-         FileInputStream serviceAccount = new FileInputStream(file);
+        try (InputStream serviceAccount = resource.getInputStream()) {
+            FirebaseOptions options = new FirebaseOptions.Builder()
+                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+                .setStorageBucket("pointage-d36f1.appspot.com")
+                    .setProjectId("pointage-d36f1")
+                .build();
 
-         FirebaseOptions options = new FirebaseOptions.Builder()
-                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                 .setStorageBucket("pointage-d36f1.appspot.com")
-                 .build();
-
-         if (FirebaseApp.getApps().isEmpty()) {
-             FirebaseApp.initializeApp(options);
-         }
-     }
-
- }
+            if (FirebaseApp.getApps().isEmpty()) {
+                FirebaseApp.initializeApp(options);
+                System.out.println(" Firebase initialisé avec succès !");
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Erreur lors de l'initialisation de Firebase : " + e.getMessage(), e);
+        }
+    }
+}

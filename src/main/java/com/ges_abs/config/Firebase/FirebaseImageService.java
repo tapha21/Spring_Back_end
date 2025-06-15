@@ -1,10 +1,12 @@
 package com.ges_abs.config.Firebase;
 
+import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.storage.Bucket;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,27 +22,35 @@ public class FirebaseImageService {
 
    private Storage storage;
 
-   @PostConstruct
-   public void init() {
-       storage = StorageOptions.getDefaultInstance().getService();
+    @PostConstruct
+    public void init() {
+        try {
+            InputStream serviceAccount = new ClassPathResource("firebase/firebase-config.json").getInputStream();
 
-       // DEBUG: Affiche la variable d'environnement utilisée
-       System.out.println("GOOGLE_APPLICATION_CREDENTIALS=" + System.getenv("GOOGLE_APPLICATION_CREDENTIALS"));
+            storage = StorageOptions.newBuilder()
+                    .setProjectId("pointage-d36f1")
+                    .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+                    .build()
+                    .getService();
 
-       // DEBUG: Liste les buckets accessibles par le service account
-       System.out.println("--- Buckets accessibles ---");
-       for (Bucket b : storage.list().iterateAll()) {
-           System.out.println(b.getName());
-       }
+            System.out.println("GOOGLE_APPLICATION_CREDENTIALS (manuel) OK");
 
-       // DEBUG: Tente de récupérer le bucket demandé
-       Bucket bucket = storage.get(bucketName);
-       if (bucket == null) {
-           throw new IllegalStateException("Le bucket '" + bucketName + "' est introuvable ou inaccessible.");
-       }
-   }
+            for (Bucket b : storage.list().iterateAll()) {
+                System.out.println("Bucket trouvé: " + b.getName());
+            }
 
-   public String uploadFile(MultipartFile file) throws IOException {
+            Bucket bucket = storage.get(bucketName);
+            if (bucket == null) {
+                throw new IllegalStateException("Le bucket '" + bucketName + "' est introuvable ou inaccessible.");
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException("Erreur lors de l'initialisation du stockage Firebase : " + e.getMessage(), e);
+        }
+    }
+
+
+    public String uploadFile(MultipartFile file) throws IOException {
        String fileName = file.getOriginalFilename();
        InputStream content = file.getInputStream();
 
