@@ -17,13 +17,13 @@ import lombok.NoArgsConstructor;
 @Document(collection = "cours")
 public class Cours extends AbstractEntity {
     private String libelle;
-    @DBRef
+    @DBRef(lazy = true)
     private Professeur professeur;
-    @DBRef
+@DBRef(lazy = true)
     private Classe classe;
-    @DBRef
+@DBRef(lazy = true)
     private List<Session> sessions = new ArrayList<>();
-    @DBRef
+   @DBRef(lazy = true)
     private List<EtudiantCours> etudiantCoursList = new ArrayList<>();
 
     public Cours(String libelle, Professeur professeur, Classe classe) {

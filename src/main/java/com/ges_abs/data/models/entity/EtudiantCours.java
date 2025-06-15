@@ -13,9 +13,9 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = false)
 @Document(collection = "etudiantCours")
 public class EtudiantCours extends AbstractEntity {
-    @DBRef
+  @DBRef(lazy = true)
     private Etudiant etudiant;
-    @DBRef
+ @DBRef(lazy = true)
     private Cours cours;
     @Override
     public String toString() {

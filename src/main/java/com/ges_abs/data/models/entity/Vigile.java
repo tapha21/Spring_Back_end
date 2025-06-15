@@ -20,9 +20,9 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = false)
 @Document(collection = "vigile")
 public class Vigile extends AbstractEntity{
-    @DBRef
+    @DBRef(lazy = true)
     private User user;
-    @DBRef
+    @DBRef(lazy = true)
     private List<Pointage> pointageList = new ArrayList<>();
 
     public Vigile(Optional<User> user1) {

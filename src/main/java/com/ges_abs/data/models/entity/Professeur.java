@@ -24,7 +24,7 @@ public class Professeur extends AbstractEntity{
     private String telephone;
     private Role role;
 
-    @DBRef
+    @DBRef(lazy = true)
     private List<Cours> cours = new ArrayList<>();
 
     public Professeur(String nom, String prenom, String telephone, Role role) {

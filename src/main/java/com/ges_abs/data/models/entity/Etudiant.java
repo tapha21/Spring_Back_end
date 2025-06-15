@@ -26,15 +26,15 @@ public class Etudiant extends AbstractEntity {
     private Niveau niveau;
     private Filiere filiere;
     private String matricule;
-    @DBRef
+ @DBRef(lazy = true)
     private Classe classe;
-    @DBRef
+  @DBRef(lazy = true)
     private User user;
-    @DBRef
+    @DBRef(lazy = true)
     private List<Inscription> inscriptionList = new ArrayList<>();
-    @DBRef
+    @DBRef(lazy = true)
     private List<EtudiantCours> etudiantCoursList = new ArrayList<>();
-    @DBRef
+   @DBRef(lazy = true)
     private List<Pointage> pointageList = new ArrayList<>();
     @Override
     public String toString() {

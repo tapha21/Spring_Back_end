@@ -10,7 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @AllArgsConstructor
 @Document(collection = "admin")
 public class Admin {
-    @DBRef
+@DBRef(lazy = true)
     private User user;
 
 }

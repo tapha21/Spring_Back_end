@@ -22,7 +22,7 @@ public class Annee extends AbstractEntity{
     private String libelle;
     private LocalDate dateDebut;
     private LocalTime heureDebut;
-    @DBRef
+   @DBRef(lazy = true)
     private List<Inscription> inscriptionList = new ArrayList<>();
 
     public Annee(String libelle, LocalDate dateDebut, LocalTime heureDebut) {

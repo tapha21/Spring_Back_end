@@ -27,9 +27,9 @@ public class Evenement extends AbstractEntity {
     private List<String> justificatifImage;
     private Etat etat;
     private Type type;
-    @DBRef
+   @DBRef(lazy = true)
     private Etudiant etudiant;
-    @DBRef
+    @DBRef(lazy = true)
     private Session session;
 
 }

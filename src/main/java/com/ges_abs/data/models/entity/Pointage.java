@@ -18,10 +18,10 @@ import lombok.NoArgsConstructor;
 public class Pointage extends AbstractEntity {
     private LocalDate date;
     private LocalTime heure;
-    @DBRef
+  @DBRef(lazy = true)
     private Vigile vigile;
-    @DBRef
+    @DBRef(lazy = true)
     private Etudiant etudiant;
-    @DBRef
+    @DBRef(lazy = true)
     private Session session;
 }

@@ -20,8 +20,8 @@ import lombok.NoArgsConstructor;
 public class Classe extends AbstractEntity{
     private String niveau;
     private Filiere filiere;
-    @DBRef
+    @DBRef(lazy = true)
     private List<Inscription> inscription = new ArrayList<>();
-    @DBRef
+    @DBRef(lazy = true)
     private List<Cours> cours = new ArrayList<>();
 }

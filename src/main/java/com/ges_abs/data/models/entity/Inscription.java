@@ -17,11 +17,11 @@ import lombok.NoArgsConstructor;
 @Document(collection = "inscription")
 public class Inscription extends AbstractEntity{
     private LocalDate date;
-    @DBRef
+   @DBRef(lazy = true)
     private Etudiant etudiant;
-    @DBRef
+   @DBRef(lazy = true)
     private Annee annee;
-    @DBRef
+  @DBRef(lazy = true)
     private Classe classe;
 
 }
