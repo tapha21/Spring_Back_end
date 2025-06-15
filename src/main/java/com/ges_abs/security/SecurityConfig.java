@@ -45,11 +45,14 @@ public class SecurityConfig {
                         .requestMatchers("/api/images/upload").permitAll()
 //                                .requestMatchers("/api/mobile/absences/**").hasAnyRole("VIGILE", "ETUDIANT")
                                 .requestMatchers("/api/mobile/absences/**").permitAll()
-
+                                .requestMatchers("/api/mobile/**").permitAll()
                                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                       .requestMatchers("/api/web/**").hasRole("ADMIN")
+//                       .requestMatchers("/api/web/**").hasRole("ADMIN")
+                                .requestMatchers("/api/web/**").permitAll()
+                                .requestMatchers("/api/web/absences/**").permitAll()
 
-//                       .anyRequest().authenticated()
+
+//                      .anyRequest().authenticated()
                 )
 
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
