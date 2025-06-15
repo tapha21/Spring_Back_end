@@ -42,14 +42,14 @@ public class SecurityConfig {
                         .requestMatchers("/api/web/auth/login").permitAll()
                         .requestMatchers("/api/mobile/auth/login").permitAll()
 
-                        .requestMatchers("/api/images/upload").permitAll()
+                        .requestMatchers("/api/images/upload").hasAuthority("ROLE_ETUDIANT")
 //                                .requestMatchers("/api/mobile/absences/**").hasAnyRole("VIGILE", "ETUDIANT")
-                                .requestMatchers("/api/mobile/absences/**").permitAll()
+                                .requestMatchers("/api/mobile/absences/**").hasAuthority("ROLE_ETUDIANT")
 
                                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                       .requestMatchers("/api/web/**").hasRole("ADMIN")
+                       .requestMatchers("/api/web/**").hasAuthority("ROLE_ADMIN")
 
-//                       .anyRequest().authenticated()
+                       .anyRequest().authenticated()
                 )
 
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
