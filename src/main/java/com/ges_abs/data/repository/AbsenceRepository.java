@@ -8,6 +8,8 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import com.ges_abs.data.models.entity.Evenement;
 import com.ges_abs.data.models.enumeration.Etat;
 import com.ges_abs.data.models.enumeration.Type;
+import org.springframework.data.mongodb.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -31,4 +33,15 @@ public interface AbsenceRepository extends MongoRepository<Evenement, String> {
     Page<Evenement> findByEtatAndType(Etat etat, Type type, Pageable pageable);
     Page<Evenement> findByEtudiant_Matricule(String matricule, Pageable pageable);
 
+    @Query("{ $and: [ " +
+            " { $or: [ { 'type': ?0 }, { ?0: null } ] }, " +
+            " { $or: [ { 'etat': ?1 }, { ?1: null } ] }, " +
+            " { $or: [ { 'etudiant.matricule': { $regex: ?2, $options: 'i' } }, { ?2: null } ] } " +
+            "] }")
+    Page<Evenement> findByEtatAndTypeAndMatricule(
+            @Param("etat") Etat etat,
+            @Param("type") Type type,
+            @Param("matricule") String matricule,
+            Pageable pageable
+    );
 }

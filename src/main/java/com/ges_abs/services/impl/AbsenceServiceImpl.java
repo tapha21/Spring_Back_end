@@ -144,6 +144,8 @@ public class AbsenceServiceImpl  implements AbsenceService {
         return absenceRepository.findByEtudiant_Matricule(matricule, pageable);
     }
 
-
-
+    @Override
+    public Page<Evenement> findByEtatAndTypeAndMatricule(Etat etatEnum, Type typeEnum, String matricule, Pageable pageable) {
+        return absenceRepository.findByEtatAndTypeAndMatricule(etatEnum, typeEnum, matricule, pageable);
+    }
 }

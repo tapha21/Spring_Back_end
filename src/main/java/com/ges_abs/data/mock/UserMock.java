@@ -14,8 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@Order(2)
-//@Component
+@Order()
+@Component
 public class UserMock implements CommandLineRunner {
 
     private final UserRepository userRepository;
@@ -26,53 +26,17 @@ public class UserMock implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        if (userRepository.count() == 0) {
-            List<User> users = new ArrayList<>();
-            User admin = new User();
-            admin.setLogin("admin1");
-            admin.setPassword("pass1");
-            admin.setNom("Attolode");
-            admin.setPrenom("Victorin");
-            admin.setTelephone("779952955");
-            admin.setRole(Role.ADMIN);
-            users.add(admin);
+        List<User> users = userRepository.findAll();
 
-            User admin2 = new User();
-            admin.setLogin("admin2");
-            admin.setPassword("pass2");
-            admin.setNom("Moustapha");
-            admin.setPrenom("Tall");
-            admin.setTelephone("772901490");
-            admin.setRole(Role.ADMIN);
-            users.add(admin2);
-            for (int i = 1; i <= 2; i++) {
-                User vigile = new User();
-                vigile.setLogin("vigile" + i);
-                vigile.setPassword("pass" + i);
-                vigile.setNom("VigileNom" + i);
-                vigile.setPrenom("VigilePrenom" + i);
-                vigile.setTelephone("111111111" + i);
-                vigile.setRole(Role.VIGILE);
-                users.add(vigile);
-            }
-            User etudiant = new User();
-            etudiant.setLogin("etudiant1");
-            etudiant.setPassword("pass1");
-            etudiant.setNom("Diop");
-            etudiant.setPrenom("Papa Mbaye" );
-            etudiant.setTelephone("773646282" );
-            etudiant.setRole(Role.ETUDIANT);
-            users.add(etudiant);
-
-            User etudiant2 = new User();
-            etudiant.setLogin("etudiant2");
-            etudiant.setPassword("pass2");
-            etudiant.setNom("Ikeh");
-            etudiant.setPrenom("Favour");
-            etudiant.setTelephone("709496994");
-            etudiant.setRole(Role.ETUDIANT);
-            users.add(etudiant2);
+        User etudiant1 = new User();
+            etudiant1.setLogin("etudiant");
+            etudiant1.setPassword("pass2");
+            etudiant1.setNom("Diop");
+            etudiant1.setPrenom("Mbaye");
+            etudiant1.setTelephone("705365484");
+            etudiant1.setRole(Role.ETUDIANT);
+            users.add(etudiant1);
             userRepository.saveAll(users);
         }
     }
-}
+

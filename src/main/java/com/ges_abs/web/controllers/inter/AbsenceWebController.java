@@ -48,10 +48,11 @@ public interface AbsenceWebController {
     ResponseEntity<Map<String, Object>> validerAbsence(@PathVariable String id);
     @PutMapping("/{id}/rejeter")
     ResponseEntity<Map<String, Object>> rejeterAbsence(@PathVariable String id);
-    @GetMapping("/filtre/etat-type")
-    ResponseEntity<Map<String, Object>> getByEtatAndType(
-            @RequestParam String etat,
-            @RequestParam String type,
+    @GetMapping("/filtre/etat-type-matricule")
+    ResponseEntity<Map<String, Object>> getByEtatAndTypeAndMatricule(
+            @RequestParam(required = false) String type,
+            @RequestParam(required = false) String etat,
+            @RequestParam(required = false) String matricule,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size
     );

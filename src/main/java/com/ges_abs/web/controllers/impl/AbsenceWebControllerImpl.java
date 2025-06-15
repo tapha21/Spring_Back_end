@@ -231,15 +231,17 @@ public class AbsenceWebControllerImpl implements AbsenceWebController {
     }
 
     @Override
-    public ResponseEntity<Map<String, Object>> getByEtatAndType(
+    public ResponseEntity<Map<String, Object>> getByEtatAndTypeAndMatricule(
             @RequestParam(required = false) String etat,
             @RequestParam(required = false) String type,
+            @RequestParam(required = false) String matricule,
             @RequestParam int page,
             @RequestParam int size
     ) {
         Etat etatEnum = null;
         Type typeEnum = null;
 
+        // Conversion sécurisée de l'état
         if (etat != null && !etat.isEmpty()) {
             try {
                 etatEnum = Etat.valueOf(etat.toUpperCase());
@@ -248,6 +250,7 @@ public class AbsenceWebControllerImpl implements AbsenceWebController {
             }
         }
 
+        // Conversion sécurisée du type
         if (type != null && !type.isEmpty()) {
             try {
                 typeEnum = Type.valueOf(type.toUpperCase());
@@ -255,9 +258,13 @@ public class AbsenceWebControllerImpl implements AbsenceWebController {
                 return ResponseEntity.badRequest().body(Map.of("message", "Type invalide: " + type));
             }
         }
+        // Si matricule est vide ou blanc, on le met à null pour la requête
+        if (matricule != null && matricule.trim().isEmpty()) {
+            matricule = null;
+        }
 
         Pageable pageable = PageRequest.of(page, size);
-        Page<Evenement> absences = absenceService.findByEtatAndType(etatEnum, typeEnum, pageable);
+        Page<Evenement> absences = absenceService.findByEtatAndTypeAndMatricule(etatEnum, typeEnum, matricule, pageable);
 
         List<AbsenceWebResponseDto> data = absences.getContent().stream()
                 .map(AbsenceWebMapper.INSTANCE::toDto)
@@ -272,6 +279,7 @@ public class AbsenceWebControllerImpl implements AbsenceWebController {
 
         return ResponseEntity.ok(response);
     }
+
     @Override
     public ResponseEntity<Map<String, Object>> getByMatricule(String matricule, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);

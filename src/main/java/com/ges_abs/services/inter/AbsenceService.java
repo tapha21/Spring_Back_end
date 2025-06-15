@@ -31,4 +31,5 @@ public interface AbsenceService {
         Page<Evenement> findByEtatAndType(Etat etat, Type type, Pageable pageable);
         Page<Evenement> findByMatricule(String matricule, Pageable pageable);
 
+        Page<Evenement> findByEtatAndTypeAndMatricule(Etat etatEnum, Type typeEnum, String matricule, Pageable pageable);
 }
