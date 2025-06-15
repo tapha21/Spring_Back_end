@@ -43,14 +43,14 @@ public class SecurityConfig {
                         .requestMatchers("/api/mobile/auth/login").permitAll()
 
                         .requestMatchers("/api/images/upload").permitAll()
-//                                .requestMatchers("/api/mobile/absences/**").hasAnyRole("USER", "ETUDIANT")
+                                .requestMatchers("/api/mobile/absences/**").hasAnyRole("USER", "ETUDIANT")
                                 .requestMatchers("/api/mobile/absences/**").permitAll()
 
                                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                                 .requestMatchers("/api/web/absences/**").permitAll()
-//                        .requestMatchers("/api/web/**").hasRole("ADMIN")
+                       .requestMatchers("/api/web/**").hasRole("ADMIN")
 
-//                        .anyRequest().authenticated()
+                       .anyRequest().authenticated()
                 )
 
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
