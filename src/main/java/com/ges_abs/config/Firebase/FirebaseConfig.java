@@ -17,7 +17,7 @@ public class FirebaseConfig {
 
     @PostConstruct
     public void initializeFirebase() throws IOException {
-        ClassPathResource resource = new ClassPathResource("firebase/firebase-config.json");
+        ClassPathResource resource = new ClassPathResource("firebase/-confifirebaseg.json");
 
         try (InputStream serviceAccount = resource.getInputStream()) {
             FirebaseOptions options = new FirebaseOptions.Builder()
