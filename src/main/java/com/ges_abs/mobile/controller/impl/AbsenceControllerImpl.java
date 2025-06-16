@@ -144,6 +144,7 @@ public class AbsenceControllerImpl implements AbsenceController {
             }
             justificatifs.add(firebaseUrl);
             absence.setJustificatifImage(justificatifs);
+            absence.setJustification(commentaire);
             absence.setEtat(Etat.JUSTIFIE);
             Evenement updated = absenceService.update(absence);
             AbsenceWebResponseDto dto = AbsenceWebMapper.INSTANCE.toDto(updated);
