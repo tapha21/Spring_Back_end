@@ -75,7 +75,7 @@ public class EtudiantControllerImpl implements EtudiantController {
             return ResponseEntity.ok(dto);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("message", "Aucune session trouvée pour aujourd'hui"));
+                    .body(Map.of("message", "Aucune session en cours ou à venir pour aujourd'hui"));
         }
     }
 

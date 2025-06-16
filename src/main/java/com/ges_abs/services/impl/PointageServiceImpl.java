@@ -80,17 +80,18 @@ public class PointageServiceImpl implements PointageService {
         }
 
         Optional<Session> sessionEnCoursOpt = getSessionEnCours(sessionsDuJour);
-        Session sessionLieeAuPointage = null;
+        Session sessionLieeAuPointage;
 
         if (sessionEnCoursOpt.isPresent()) {
             sessionLieeAuPointage = sessionEnCoursOpt.get();
             System.out.println("🟢 Session en cours : " + sessionLieeAuPointage);
         } else {
             System.out.println("🟡 Aucune session en cours. Vérification du timing du pointage...");
-
             sessionsDuJour.sort(Comparator.comparing(Session::getHeureDebut));
 
             boolean pointageAvantUneSession = false;
+            sessionLieeAuPointage = null;
+
             for (Session session : sessionsDuJour) {
                 if (heurePointage.isBefore(session.getHeureDebut())) {
                     sessionLieeAuPointage = session;
@@ -125,12 +126,13 @@ public class PointageServiceImpl implements PointageService {
             }
         }
 
-        // ✅ Empêche les doublons de pointage
+        // ✅ Maintenant que sessionLieeAuPointage est bien définie, on peut faire la vérification
         Optional<Pointage> existingPointage = pointageRepository.findByEtudiant_IdAndSession_Id(etudiantId, sessionLieeAuPointage.getId());
         if (existingPointage.isPresent()) {
             throw new RuntimeException("Un pointage pour cet étudiant et cette session existe déjà.");
         }
 
+        // Création du pointage
         Pointage pointage = new Pointage();
         pointage.setDate(datePointage);
         pointage.setHeure(heurePointage);
