@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-@CrossOrigin(origins = "*") // ou mets les origines autorisées précises
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/images")
 public class ImageController {
@@ -39,10 +39,8 @@ public class ImageController {
            if (file.isEmpty()) {
                return ResponseEntity.badRequest().body("Aucun fichier n'a été fourni");
            }
-
            String imageUrl = imageService.uploadFile(file);
            System.out.println("Fichier reçu : " + file.getOriginalFilename());
-
            return ResponseEntity.ok(imageUrl);
        } catch (Exception e) {
            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Upload failed: " + e.getMessage());
