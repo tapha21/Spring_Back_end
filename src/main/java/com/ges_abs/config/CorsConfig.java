@@ -17,17 +17,19 @@ public class CorsConfig {
         CorsConfiguration config = new CorsConfiguration();
 
         // Origines autorisées
-        config.setAllowedOrigins(List.of(
-                "https://angular-hackaton.vercel.app",
-                "https://angular-hackaton-lkingtxq6-victorin-attolodes-projects.vercel.app",
-                "https://dev-back-end-sd0s.onrender.com",
-                "https://pointage-d36f1.firebasestorage.app",
-                "https://pointage-d36f1.firebaseapp.com"
-
-        ));
+//        config.setAllowedOrigins(List.of(
+//                "https://angular-hackaton.vercel.app",
+//                "https://angular-hackaton-lkingtxq6-victorin-attolodes-projects.vercel.app",
+//                "https://dev-back-end-sd0s.onrender.com",
+//                "https://pointage-d36f1.firebasestorage.app",
+//                "https://pointage-d36f1.firebaseapp.com",
+//                "http://localhost:8082"
+//
+//        ));
+        config.setAllowedOriginPatterns(List.of("*"));
 
         // Méthodes HTTP autorisées
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
 
         // Headers autorisés (dont Authorization pour JWT)
         config.setAllowedHeaders(List.of("*"));
