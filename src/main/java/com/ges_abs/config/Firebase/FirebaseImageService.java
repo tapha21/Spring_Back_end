@@ -13,6 +13,10 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
+import java.util.UUID;
 
 @Service
 public class FirebaseImageService {
@@ -50,16 +54,21 @@ public class FirebaseImageService {
     }
 
 
-    public String uploadFile(MultipartFile file) throws IOException {
-       String fileName = file.getOriginalFilename();
-       InputStream content = file.getInputStream();
+  public String uploadFile(MultipartFile file) throws IOException {
+    String fileName = file.getOriginalFilename();
+    InputStream content = file.getInputStream();
+    String token = UUID.randomUUID().toString();
 
-       BlobInfo blobInfo = BlobInfo.newBuilder(bucketName, fileName)
-               .setContentType(file.getContentType())
-               .build();
-
-       storage.create(blobInfo, content);
-
-       return String.format("https://storage.googleapis.com/%s/%s", bucketName, fileName);
-   }
+    BlobInfo blobInfo = BlobInfo.newBuilder(bucketName, fileName)
+            .setContentType(file.getContentType())
+            .setMetadata(Map.of("firebaseStorageDownloadTokens", token))
+            .build();
+    storage.create(blobInfo, content);
+    return String.format(
+            "https://firebasestorage.googleapis.com/v0/b/%s/o/%s?alt=media&token=%s",
+            bucketName,
+            URLEncoder.encode(fileName, StandardCharsets.UTF_8),
+            token
+    );
+}
 }
