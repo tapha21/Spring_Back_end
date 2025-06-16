@@ -152,7 +152,7 @@ public class AbsenceServiceImpl  implements AbsenceService {
         if (matricule != null && !matricule.isEmpty()) {
             Optional<Etudiant> etudiantOpt = etudiantRepository.findByMatricule(matricule);
             if (etudiantOpt.isEmpty()) {
-                return Page.empty(); // ou tu peux throw une exception
+                return Page.empty();
             }
             etudiantId = etudiantOpt.get().getId();
         }

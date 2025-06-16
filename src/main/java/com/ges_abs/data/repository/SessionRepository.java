@@ -1,5 +1,6 @@
 package com.ges_abs.data.repository;
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 
 import com.ges_abs.data.models.entity.Cours;
@@ -14,4 +15,6 @@ public interface SessionRepository extends MongoRepository<Session, String> {
     List<Session> findByCours_Id(String coursId);
 
     List<Session> findByCoursInAndDate(List<Cours> coursList, LocalDate today);
+
+    List<Session> findByDate(LocalDate aujourdHui);
 }
