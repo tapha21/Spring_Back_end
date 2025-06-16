@@ -25,12 +25,6 @@ public class ImageController {
        this.imageService = imageService;
    }
 
-   @Operation(summary = "Uploader une image",
-           description = "Permet d’uploader un fichier image sur Firebase et retourne l’URL.",
-           responses = {
-                   @ApiResponse(responseCode = "200", description = "Image uploadée avec succès"),
-                   @ApiResponse(responseCode = "500", description = "Erreur serveur", content = @Content)
-           })
    @PostMapping(value = "/upload", consumes = "multipart/form-data")
    public ResponseEntity<String> uploadImage(
            @Parameter(description = "Fichier à uploader", required = true)

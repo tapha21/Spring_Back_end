@@ -39,15 +39,17 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**").permitAll()
+
                                 .requestMatchers("/api/web/auth/login").permitAll()
                                 .requestMatchers("/api/mobile/auth/login").permitAll()
-                               .requestMatchers("/api/images/upload").hasAuthority("ROLE_ETUDIANT")
-                                .requestMatchers("/api/mobile/**").hasAuthority("ROLE_ETUDIANT")
-                                // .requestMatchers("/api/mobile/**").permitAll()
+//                                .requestMatchers("/api/images/upload").hasAuthority("ROLE_ETUDIANT")
+                                //.requestMatchers("/api/mobile/**").hasAuthority("ROLE_ETUDIANT")
+                                .requestMatchers("/api/mobile/**").permitAll()
                                 .requestMatchers("/api/images/upload").permitAll()
                                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                                .requestMatchers("/api/web/absences/**").hasAuthority("ROLE_ADMIN")
-                               .anyRequest().authenticated()
+                                .requestMatchers("/api/web/**").hasAuthority("ROLE_ADMIN")
+
+//                        .anyRequest().authenticated()
                 )
 
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
