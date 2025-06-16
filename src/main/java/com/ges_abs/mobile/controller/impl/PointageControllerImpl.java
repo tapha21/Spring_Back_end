@@ -65,8 +65,6 @@ public class PointageControllerImpl implements PointageController {
         }
     }
 
-
-
 //    @Override
 //    public ResponseEntity<Pointage> updatePointage(String id, PointageRequestDto dto) {
 //        Optional<Pointage> existingPointageOpt = pointageService.getPointageById(id);

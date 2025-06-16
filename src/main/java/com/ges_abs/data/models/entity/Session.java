@@ -26,11 +26,11 @@ public class Session extends AbstractEntity {
     private LocalTime heureFin;
     private Salle salle;
     private Batiment batiment;
-   @DBRef(lazy = true)
+    @DBRef(lazy = true)
     private Cours cours;
-   @DBRef(lazy = true)
+    @DBRef(lazy = true)
     private List<Pointage> pointages = new ArrayList<>();
-   @DBRef(lazy = true)
+    @DBRef(lazy = true)
     private List<Evenement> evenements = new ArrayList<>();
     @Override
     public String toString() {
@@ -40,5 +40,4 @@ public class Session extends AbstractEntity {
                 + ", heureFin=" + heureFin
                 + ", cours=" + (cours != null ? cours.getLibelle() : "inconnu") + "}";
     }
-
 }
