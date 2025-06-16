@@ -58,7 +58,6 @@ public class FirebaseImageService {
     String fileName = file.getOriginalFilename();
     InputStream content = file.getInputStream();
     String token = UUID.randomUUID().toString();
-
     BlobInfo blobInfo = BlobInfo.newBuilder(bucketName, fileName)
             .setContentType(file.getContentType())
             .setMetadata(Map.of("firebaseStorageDownloadTokens", token))

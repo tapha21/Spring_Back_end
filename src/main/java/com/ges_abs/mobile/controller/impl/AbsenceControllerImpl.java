@@ -1,6 +1,7 @@
 package com.ges_abs.mobile.controller.impl;
 
 
+import com.ges_abs.config.Firebase.FirebaseImageService;
 import com.ges_abs.data.models.entity.Evenement;
 import com.ges_abs.data.models.enumeration.Etat;
 import com.ges_abs.data.models.enumeration.Type;
@@ -25,9 +26,11 @@ import java.util.*;
 @RestController
 public class AbsenceControllerImpl implements AbsenceController {
     private final AbsenceService absenceService;
+    private final FirebaseImageService firebaseImageService;
 
-    public AbsenceControllerImpl(AbsenceService absenceService) {
+    public AbsenceControllerImpl(AbsenceService absenceService, FirebaseImageService firebaseImageService) {
         this.absenceService = absenceService;
+        this.firebaseImageService = firebaseImageService;
     }
 
     @Override
@@ -134,27 +137,23 @@ public class AbsenceControllerImpl implements AbsenceController {
             ), HttpStatus.BAD_REQUEST);
         }
         try {
-            String base64Image = Base64.getEncoder().encodeToString(file.getBytes());
-
-            // Récupérer la liste actuelle ou en créer une nouvelle
+            String firebaseUrl = firebaseImageService.uploadFile(file);
             List<String> justificatifs = absence.getJustificatifImage();
             if (justificatifs == null) {
                 justificatifs = new ArrayList<>();
             }
-            // Ajouter la nouvelle image
-            justificatifs.add(base64Image);
+            justificatifs.add(firebaseUrl);
             absence.setJustificatifImage(justificatifs);
-
             absence.setEtat(Etat.JUSTIFIE);
             Evenement updated = absenceService.update(absence);
             AbsenceWebResponseDto dto = AbsenceWebMapper.INSTANCE.toDto(updated);
             return new ResponseEntity<>(Map.of(
-                    "message", "Justificatif image ajouté avec succès",
+                    "message", "Justificatif Firebase ajouté avec succès",
                     "data", dto
             ), HttpStatus.OK);
         } catch (IOException e) {
             return new ResponseEntity<>(Map.of(
-                    "message", "Erreur lors de la lecture du fichier",
+                    "message", "Erreur lors de l'envoi vers Firebase",
                     "status", "error"
             ), HttpStatus.INTERNAL_SERVER_ERROR);
         }
