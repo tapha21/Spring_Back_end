@@ -20,7 +20,7 @@ public class CorsConfig {
        config.setAllowedOrigins(List.of(
                "https://angular-hackaton.vercel.app",
                "https://angular-hackaton-lkingtxq6-victorin-attolodes-projects.vercel.app",
-               "https://dev-back-end-sd0s.onrender.com",
+               "https://dev-back-end-sd0s.onrender.com"
 
        ));
         // config.setAllowedOriginPatterns(List.of("*"));
